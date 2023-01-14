@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { AuthLoginUserDto } from './dto/auth-login-user.dto';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -10,10 +10,10 @@ export class AuthController {
     this.authService = authService;
   }
 
-  @Post('/signin')
+  @Post('signin')
   signIn(
-    @Body() authCredentialsDto: AuthCredentialsDto,
+    @Body() authLoginUserDto: AuthLoginUserDto,
   ): Promise<{ accessToken: string }> {
-    return this.authService.signIn(authCredentialsDto);
+    return this.authService.signIn(authLoginUserDto);
   }
 }

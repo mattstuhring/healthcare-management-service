@@ -28,9 +28,6 @@ export class Record {
   @Column({ name: 'health_status' })
   healthStatus: HealthStatus;
 
-  @Column({ name: 'updated_by' })
-  updatedBy: string;
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

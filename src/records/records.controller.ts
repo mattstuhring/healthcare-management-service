@@ -42,7 +42,7 @@ export class RecordsController {
   }
 
   // Access - Admin, Employee
-  @Get('/:id')
+  @Get(':id')
   getRecordById(@Param() getRecordDto: GetRecordDto): Promise<Record> {
     return this.recordsService.getRecordById(getRecordDto);
   }
@@ -62,7 +62,7 @@ export class RecordsController {
   }
 
   // Access - Admin, Employee
-  @Patch('/:id/health/status')
+  @Patch(':id/health/status')
   updateRecordHealth(
     @Param() updateRecordDto: UpdateRecordDto,
     @Body() updateRecordHealthDto: UpdateRecordHealthDto,
@@ -74,7 +74,7 @@ export class RecordsController {
   }
 
   // Access - Admin
-  @Delete('/:id')
+  @Delete(':id')
   @HttpCode(204)
   deleteRecord(
     @Param() deleteRecordDto: DeleteRecordDto,

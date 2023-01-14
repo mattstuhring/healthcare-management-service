@@ -81,13 +81,12 @@ export class RecordsService {
     user: User,
   ): Promise<Record> {
     const { name, dateOfBirth, typeOfCare } = createRecordDto;
-    const { username } = user;
     const record = this.recordsRepository.create({
       name,
       dateOfBirth,
       typeOfCare,
       healthStatus: HealthStatus.UNKNOWN,
-      updatedBy: username,
+      updatedAt: new Date(),
       user,
     });
 
