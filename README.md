@@ -23,26 +23,26 @@ Backend REST API service for healthcare management.
 
 1. Clone the project, and in the root directory install the dependencies.
 
-  ```bash
-  $ git clone https://github.com/mattstuhring/healthcare-management-service.git
-  $ npm install
-  ```
+    ```bash
+    $ git clone https://github.com/mattstuhring/healthcare-management-service.git
+    $ npm install
+    ```
 
 2. In the root directory, create a ```.env.dev``` file for development configs by following ```.env.example```.
  
-3. Start the server on PORT 3000.
+3. Start the server on ```PORT 3000```.
 
-  Get started in development mode:
+    Get started in development mode:
 
-  ```bash
-  $ npm run start:dev
-  ```
+    ```bash
+    $ npm run start:dev
+    ```
 
-  For production mode use the following command. (Note: you will need to create a ```.env.prod``` file)
+    For production mode use the following command. (Note: you will need to create a ```.env.prod``` file)
 
-  ```bash
-  $ npm run start:prod
-  ```
+    ```bash
+    $ npm run start:prod
+    ```
 
 ## Testing
 
@@ -61,7 +61,7 @@ $ npm run test:cov
 
 To test the APIs use Postman.
 
-TODO - Document API
+**TODO** - Document API
 
 ## Authors
 
