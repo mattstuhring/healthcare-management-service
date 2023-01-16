@@ -16,7 +16,6 @@ Backend REST API service for healthcare management.
 - NodeJS v19
 - NestJS v9
 - Postgres v8
-- CognitoJS v6
 - TypeORM v0.3
 
 ## Using this project
