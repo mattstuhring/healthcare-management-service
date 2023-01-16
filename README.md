@@ -59,7 +59,7 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-To test the APIs use Postman.
+To test the API use Postman.
 
 **TODO** - Document API
 
