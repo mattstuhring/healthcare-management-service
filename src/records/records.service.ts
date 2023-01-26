@@ -14,21 +14,24 @@ import { DeleteRecordDto } from './dto/delete-record.dto';
 import { UpdateRecordDto } from './dto/update-record.dto';
 import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
 import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
-import { Record } from './record.entity';
-import { User } from '../users/user.entity';
+import { RecordEntity } from './record.entity';
+import { UserEntity } from '../users/user.entity';
+import { Role } from '../roles/constants/role.enum';
 
 @Injectable()
 export class RecordsService {
-  private recordsRepository: Repository<Record>;
+  private recordsRepository: Repository<RecordEntity>;
   private logger = new Logger('RecordsService', { timestamp: true });
 
-  constructor(@InjectRepository(Record) recordsRepository: Repository<Record>) {
+  constructor(
+    @InjectRepository(RecordEntity) recordsRepository: Repository<RecordEntity>,
+  ) {
     this.recordsRepository = recordsRepository;
   }
 
   async getRecords(
     getRecordsFilterDto: GetRecordsFilterDto,
-  ): Promise<Record[]> {
+  ): Promise<RecordEntity[]> {
     const { typeOfCare, search } = getRecordsFilterDto;
     const query = this.recordsRepository.createQueryBuilder('record');
 
@@ -61,9 +64,9 @@ export class RecordsService {
     }
   }
 
-  async getRecordById(getRecordDto: GetRecordDto): Promise<Record> {
+  async getRecordById(getRecordDto: GetRecordDto): Promise<RecordEntity> {
     const { id } = getRecordDto;
-    const record: Record = await this.recordsRepository.findOne({
+    const record: RecordEntity = await this.recordsRepository.findOne({
       where: {
         id,
       },
@@ -78,8 +81,8 @@ export class RecordsService {
 
   async createRecord(
     createRecordDto: CreateRecordDto,
-    user: User,
-  ): Promise<Record> {
+    user: UserEntity,
+  ): Promise<RecordEntity> {
     const { name, dateOfBirth, typeOfCare } = createRecordDto;
     const record = this.recordsRepository.create({
       name,
@@ -98,7 +101,7 @@ export class RecordsService {
   async updateRecordHealthStatus(
     updateRecordDto: UpdateRecordDto,
     updateRecordHealthDto: UpdateRecordHealthDto,
-  ): Promise<Record> {
+  ): Promise<RecordEntity> {
     const { healthStatus } = updateRecordHealthDto;
     const record = await this.getRecordById(updateRecordDto);
     record.healthStatus = healthStatus;
@@ -110,9 +113,9 @@ export class RecordsService {
 
   async deleteRecord(
     deleteRecordDto: DeleteRecordDto,
-    user: User,
+    user: UserEntity,
   ): Promise<void> {
-    if (user.accessLevel === 'ADMIN') {
+    if (user) {
       const { id } = deleteRecordDto;
       const result = await this.recordsRepository.delete(id);
 

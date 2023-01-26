@@ -1,16 +1,18 @@
-import { Record } from '../records/record.entity';
+import { RecordEntity } from '../records/record.entity';
+import { RoleEntity } from '../roles/role.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { AccessLevel } from './constants/user-access-level.enum';
 
-@Entity()
-export class User {
+@Entity({ name: 'user' })
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,15 +22,18 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ name: 'access_level' })
-  accessLevel: AccessLevel;
-
   @CreateDateColumn({ name: 'created_at' })
   createDate: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updateDate: Date;
 
-  @OneToMany(() => Record, (record) => record.user, { eager: true })
-  records: Record[];
+  @OneToMany(() => RecordEntity, (record) => record.user, { eager: true })
+  records: RecordEntity[];
+
+  @ManyToOne(() => RoleEntity, (role: RoleEntity) => role.users, {
+    eager: false,
+  })
+  @JoinColumn({ name: 'role_id' })
+  role: RoleEntity;
 }

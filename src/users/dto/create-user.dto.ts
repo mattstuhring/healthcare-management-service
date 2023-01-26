@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { AccessLevel } from '../constants/user-access-level.enum';
+import { Role } from '../../roles/constants/role.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -28,6 +28,6 @@ export class CreateUserDto {
   })
   password: string;
 
-  @IsEnum(AccessLevel)
-  accessLevel: AccessLevel;
+  @IsEnum(Role)
+  role: Role;
 }

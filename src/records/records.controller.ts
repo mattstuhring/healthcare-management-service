@@ -12,7 +12,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { RecordsService } from './records.service';
-import { Record } from './record.entity';
+import { RecordEntity } from './record.entity';
 import { CreateRecordDto } from './dto/create-record.dto';
 import { GetRecordDto } from './dto/get-record.dto';
 import { DeleteRecordDto } from './dto/delete-record.dto';
@@ -21,7 +21,7 @@ import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
 import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../users/decorators/get-user.decorator';
-import { User } from '../users/user.entity';
+import { UserEntity } from '../users/user.entity';
 
 @Controller('records')
 @UseGuards(AuthGuard())
@@ -37,13 +37,13 @@ export class RecordsController {
   @Get()
   getRecords(
     @Query() getRecordsFilterDto: GetRecordsFilterDto,
-  ): Promise<Record[]> {
+  ): Promise<RecordEntity[]> {
     return this.recordsService.getRecords(getRecordsFilterDto);
   }
 
   // Access - Admin, Employee
   @Get(':id')
-  getRecordById(@Param() getRecordDto: GetRecordDto): Promise<Record> {
+  getRecordById(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
     return this.recordsService.getRecordById(getRecordDto);
   }
 
@@ -51,8 +51,8 @@ export class RecordsController {
   @Post()
   createRecord(
     @Body() createRecordDto: CreateRecordDto,
-    @GetUser() user: User,
-  ): Promise<Record> {
+    @GetUser() user: UserEntity,
+  ): Promise<RecordEntity> {
     this.logger.verbose(
       `User ${user.username} creating new record: ${JSON.stringify(
         createRecordDto,
@@ -66,7 +66,7 @@ export class RecordsController {
   updateRecordHealth(
     @Param() updateRecordDto: UpdateRecordDto,
     @Body() updateRecordHealthDto: UpdateRecordHealthDto,
-  ): Promise<Record> {
+  ): Promise<RecordEntity> {
     return this.recordsService.updateRecordHealthStatus(
       updateRecordDto,
       updateRecordHealthDto,
@@ -78,7 +78,7 @@ export class RecordsController {
   @HttpCode(204)
   deleteRecord(
     @Param() deleteRecordDto: DeleteRecordDto,
-    @GetUser() user: User,
+    @GetUser() user: UserEntity,
   ): Promise<void> {
     return this.recordsService.deleteRecord(deleteRecordDto, user);
   }

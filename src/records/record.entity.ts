@@ -1,4 +1,4 @@
-import { User } from '../users/user.entity';
+import { UserEntity } from '../users/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,8 +11,8 @@ import { HealthStatus } from './constants/record-health-status.enum';
 import { Healthcare } from './constants/record-healthcare.enum';
 import { Exclude } from 'class-transformer';
 
-@Entity()
-export class Record {
+@Entity({ name: 'record' })
+export class RecordEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -34,7 +34,7 @@ export class Record {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => User, (user) => user.records, { eager: false })
+  @ManyToOne(() => UserEntity, (user) => user.records, { eager: false })
   @Exclude()
-  user: User;
+  user: UserEntity;
 }
