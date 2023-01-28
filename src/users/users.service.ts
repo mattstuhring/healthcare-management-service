@@ -10,45 +10,41 @@ import { UserEntity } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
-import { Role } from 'src/roles/constants/role.enum';
+import { RolesService } from 'src/roles/roles.service';
+import { GetRoleByNameDto } from 'src/roles/dto/get-role-by-name.dto';
 
 @Injectable()
 export class UsersService {
   private usersRepository: Repository<UserEntity>;
-  private rolesRepository: Repository<RoleEntity>;
+  private rolesService: RolesService;
 
   constructor(
     @InjectRepository(UserEntity)
     usersRepository: Repository<UserEntity>,
-    @InjectRepository(RoleEntity)
-    rolesRepository: Repository<RoleEntity>,
+    rolesService: RolesService,
   ) {
     this.usersRepository = usersRepository;
-    this.rolesRepository = rolesRepository;
+    this.rolesService = rolesService;
   }
 
   // Access - Admin
   async createUser(createUserDto: CreateUserDto): Promise<void> {
     const { username, password, role } = createUserDto;
+    const getRoleByNameDto = new GetRoleByNameDto();
+    getRoleByNameDto.name = role;
 
     try {
       const salt = await bcrypt.genSalt(); // default 10 saltRounds
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const match: RoleEntity = await this.rolesRepository.findOne({
-        where: {
-          name: role,
-        },
-      });
-
-      if (!role) {
-        throw new NotFoundException(`Role with ID: ${match.id} not found`);
-      }
+      const role: RoleEntity = await this.rolesService.getRoleByName(
+        getRoleByNameDto,
+      );
 
       const user = this.usersRepository.create({
         username,
         password: hashedPassword,
-        role: match,
+        role,
       });
 
       await this.usersRepository.save(user);

@@ -8,11 +8,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'role' })
 export class RoleEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ unique: true })
   name: Role;
@@ -36,5 +37,6 @@ export class RoleEntity {
   updatedAt: Date;
 
   @OneToMany(() => UserEntity, (user) => user.role, { eager: true })
+  @Exclude()
   users: UserEntity[];
 }

@@ -2,10 +2,13 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
+import { GetRoleByIdDto } from './dto/get-role-by-id.dto';
+import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
 import { RoleEntity } from './role.entity';
 
 @Injectable()
@@ -40,6 +43,46 @@ export class RolesService {
       } else {
         throw new InternalServerErrorException();
       }
+    }
+  }
+
+  async getRoleById(getRoleByIdDto: GetRoleByIdDto): Promise<RoleEntity> {
+    const { id } = getRoleByIdDto;
+
+    try {
+      const role: RoleEntity = await this.rolesRepository.findOne({
+        where: {
+          id,
+        },
+      });
+
+      if (!role) {
+        throw new NotFoundException(`Role with ID: ${id} not found`);
+      }
+
+      return role;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async getRoleByName(getRoleByNameDto: GetRoleByNameDto): Promise<RoleEntity> {
+    const { name } = getRoleByNameDto;
+
+    try {
+      const role: RoleEntity = await this.rolesRepository.findOne({
+        where: {
+          name,
+        },
+      });
+
+      if (!role) {
+        throw new NotFoundException(`Role with name: ${name} not found`);
+      }
+
+      return role;
+    } catch (err) {
+      console.error(err);
     }
   }
 }
