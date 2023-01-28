@@ -1,10 +1,10 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { Role } from '../constants/role.enum';
+import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
+import { RoleName } from '../constants/role-name.enum';
 
 export class CreateRoleDto {
   @IsNotEmpty()
-  @IsEnum(Role)
-  name: Role;
+  @IsEnum(RoleName)
+  name: RoleName;
 
   @IsNotEmpty()
   @IsBoolean()

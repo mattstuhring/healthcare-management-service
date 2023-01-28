@@ -3,17 +3,19 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { GetRoleByIdDto } from './dto/get-role-by-id.dto';
-import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
+import { GetRoleDto } from './dto/get-role.dto';
+import { GetRolesDto } from './dto/get-roles.dto';
 import { RoleEntity } from './role.entity';
 
 @Injectable()
 export class RolesService {
   private rolesRepository: Repository<RoleEntity>;
+  private logger = new Logger('RolesService', { timestamp: true });
 
   constructor(
     @InjectRepository(RoleEntity) rolesRepository: Repository<RoleEntity>,
@@ -46,8 +48,8 @@ export class RolesService {
     }
   }
 
-  async getRoleById(getRoleByIdDto: GetRoleByIdDto): Promise<RoleEntity> {
-    const { id } = getRoleByIdDto;
+  async getRole(getRoleDto: GetRoleDto): Promise<RoleEntity> {
+    const { id } = getRoleDto;
 
     try {
       const role: RoleEntity = await this.rolesRepository.findOne({
@@ -62,27 +64,32 @@ export class RolesService {
 
       return role;
     } catch (err) {
-      console.error(err);
+      this.logger.error(
+        `Failed to get role: ${JSON.stringify(getRoleDto)}`,
+        err.stack,
+      );
+      throw new NotFoundException(err.name, err.message);
     }
   }
 
-  async getRoleByName(getRoleByNameDto: GetRoleByNameDto): Promise<RoleEntity> {
-    const { name } = getRoleByNameDto;
+  async getRoles(getRolesDto: GetRolesDto): Promise<RoleEntity[]> {
+    const { name } = getRolesDto;
+    const query = this.rolesRepository.createQueryBuilder('role');
+
+    if (name) {
+      query.andWhere('LOWER(role.name) = LOWER(:name)', {
+        name,
+      });
+    }
 
     try {
-      const role: RoleEntity = await this.rolesRepository.findOne({
-        where: {
-          name,
-        },
-      });
-
-      if (!role) {
-        throw new NotFoundException(`Role with name: ${name} not found`);
-      }
-
-      return role;
-    } catch (err) {
-      console.error(err);
+      return await query.getMany();
+    } catch (error) {
+      this.logger.error(
+        `Failed to get roles. Filters: ${JSON.stringify(getRolesDto)}`,
+        error.stack,
+      );
+      throw new InternalServerErrorException();
     }
   }
 }

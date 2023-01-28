@@ -5,7 +5,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Role } from '../../roles/constants/role.enum';
+import { RoleName } from '../../roles/constants/role-name.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -28,6 +28,6 @@ export class CreateUserDto {
   })
   password: string;
 
-  @IsEnum(Role)
-  role: Role;
+  @IsEnum(RoleName)
+  roleName: RoleName;
 }

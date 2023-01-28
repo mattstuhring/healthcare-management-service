@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Logger, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { GetRoleByIdDto } from './dto/get-role-by-id.dto';
-import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
+import { GetRoleDto } from './dto/get-role.dto';
+import { GetRolesDto } from './dto/get-roles.dto';
 import { RoleEntity } from './role.entity';
 import { RolesService } from './roles.service';
 
@@ -15,15 +23,13 @@ export class RolesController {
   }
 
   @Get(':id')
-  getRoleById(@Param() getRoleByIdDto: GetRoleByIdDto): Promise<RoleEntity> {
-    return this.rolesService.getRoleById(getRoleByIdDto);
+  getRole(@Param() getRoleDto: GetRoleDto): Promise<RoleEntity> {
+    return this.rolesService.getRole(getRoleDto);
   }
 
-  @Get('/search/:name')
-  getRoleByName(
-    @Param() getRoleByNameDto: GetRoleByNameDto,
-  ): Promise<RoleEntity> {
-    return this.rolesService.getRoleByName(getRoleByNameDto);
+  @Get()
+  getRoleByName(@Query() getRolesDto: GetRolesDto): Promise<RoleEntity[]> {
+    return this.rolesService.getRoles(getRolesDto);
   }
 
   @Post()

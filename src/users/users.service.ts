@@ -11,7 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
 import { RolesService } from 'src/roles/roles.service';
-import { GetRoleByNameDto } from 'src/roles/dto/get-role-by-name.dto';
+import { GetRolesDto } from 'src/roles/dto/get-roles.dto';
 
 @Injectable()
 export class UsersService {
@@ -27,19 +27,24 @@ export class UsersService {
     this.rolesService = rolesService;
   }
 
-  // Access - Admin
   async createUser(createUserDto: CreateUserDto): Promise<void> {
-    const { username, password, role } = createUserDto;
-    const getRoleByNameDto = new GetRoleByNameDto();
-    getRoleByNameDto.name = role;
+    const { username, password, roleName } = createUserDto;
+    const getRolesDto = new GetRolesDto();
+    getRolesDto.name = roleName;
 
     try {
       const salt = await bcrypt.genSalt(); // default 10 saltRounds
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const role: RoleEntity = await this.rolesService.getRoleByName(
-        getRoleByNameDto,
-      );
+      const roles: RoleEntity[] = await this.rolesService.getRoles(getRolesDto);
+      const role: RoleEntity = roles[0];
+
+      if (!role) {
+        throw new NotFoundException(
+          'Role not found: ',
+          JSON.stringify(roleName),
+        );
+      }
 
       const user = this.usersRepository.create({
         username,
@@ -54,6 +59,7 @@ export class UsersService {
         throw new ConflictException('Username already exists');
       } else if (err instanceof NotFoundException) {
         console.log('Role not found: ', err.name, err.message);
+        throw new NotFoundException(err.name, err.message);
       } else {
         throw new InternalServerErrorException();
       }

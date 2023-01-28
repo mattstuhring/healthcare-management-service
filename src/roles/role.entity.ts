@@ -1,5 +1,5 @@
 import { UserEntity } from '../users/user.entity';
-import { Role } from './constants/role.enum';
+import { RoleName } from './constants/role-name.enum';
 import {
   Column,
   CreateDateColumn,
@@ -16,7 +16,7 @@ export class RoleEntity {
   id: string;
 
   @Column({ unique: true })
-  name: Role;
+  name: RoleName;
 
   @Column()
   create: boolean;
