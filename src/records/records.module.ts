@@ -3,11 +3,30 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RecordsController } from './records.controller';
 import { RecordEntity } from './record.entity';
 import { RecordsService } from './records.service';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from '../auth/auth.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [RecordsController],
   providers: [RecordsService],
-  imports: [TypeOrmModule.forFeature([RecordEntity]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([RecordEntity]),
+    UsersModule,
+    AuthModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => {
+        return {
+          secret: configService.get('JWT_SECRET'),
+          signOptions: {
+            expiresIn: 3600,
+          },
+        };
+      },
+    }),
+  ],
 })
 export class RecordsModule {}

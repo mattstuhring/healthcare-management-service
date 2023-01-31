@@ -16,7 +16,6 @@ import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
 import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
 import { RecordEntity } from './record.entity';
 import { UserEntity } from '../users/user.entity';
-import { RoleName } from '../roles/constants/role-name.enum';
 
 @Injectable()
 export class RecordsService {

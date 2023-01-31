@@ -6,29 +6,31 @@ import { Repository } from 'typeorm';
 import { JwtPayload } from './dto/jwt-payload.interface';
 import { UserEntity } from '../users/user.entity';
 import { ConfigService } from '@nestjs/config';
+import { GetUserByNameDto } from '../users/dto/get-user-by-name.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  private usersRepository: Repository<UserEntity>;
+  private usersService: UsersService;
   private configService: ConfigService;
 
-  constructor(
-    @InjectRepository(UserEntity)
-    usersRepository: Repository<UserEntity>,
-    configService: ConfigService,
-  ) {
+  constructor(usersService: UsersService, configService: ConfigService) {
     super({
       secretOrKey: configService.get('JWT_SECRET'),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     });
 
-    this.usersRepository = usersRepository;
+    this.usersService = usersService;
     this.configService = configService;
   }
 
   async validate(jwtPayload: JwtPayload): Promise<UserEntity> {
     const { username } = jwtPayload;
-    const user: UserEntity = await this.usersRepository.findOneBy({ username });
+
+    const getUserByNameDto: GetUserByNameDto = new GetUserByNameDto();
+    getUserByNameDto.username = username;
+
+    const user = await this.usersService.getUserByName(getUserByNameDto);
 
     if (!user) {
       throw new UnauthorizedException();

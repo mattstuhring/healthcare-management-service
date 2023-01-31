@@ -36,7 +36,7 @@ export class RoleEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @OneToMany(() => UserEntity, (user) => user.role, { eager: true })
+  @OneToMany(() => UserEntity, (user) => user.role, { eager: false })
   @Exclude()
   users: UserEntity[];
 }

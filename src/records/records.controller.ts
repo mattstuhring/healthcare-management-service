@@ -22,6 +22,9 @@ import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../users/decorators/get-user.decorator';
 import { UserEntity } from '../users/user.entity';
+import { Roles } from '../roles/decorators/roles.decorator';
+import { RoleName } from '../roles/constants/role-name.enum';
+import { RolesGuard } from '../roles/roles.guard';
 
 @Controller('records')
 @UseGuards(AuthGuard())
@@ -62,7 +65,7 @@ export class RecordsController {
   }
 
   // Access - Admin, Employee
-  @Patch(':id/health/status')
+  @Patch(':id/health-status')
   updateRecordHealth(
     @Param() updateRecordDto: UpdateRecordDto,
     @Body() updateRecordHealthDto: UpdateRecordHealthDto,
@@ -74,6 +77,8 @@ export class RecordsController {
   }
 
   // Access - Admin
+  @UseGuards(RolesGuard)
+  @Roles(RoleName.ADMIN)
   @Delete(':id')
   @HttpCode(204)
   deleteRecord(

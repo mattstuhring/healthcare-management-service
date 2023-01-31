@@ -12,6 +12,7 @@ import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
 import { RolesService } from 'src/roles/roles.service';
 import { GetRolesDto } from 'src/roles/dto/get-roles.dto';
+import { GetUserByNameDto } from './dto/get-user-by-name.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,9 +29,9 @@ export class UsersService {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<void> {
-    const { username, password, roleName } = createUserDto;
+    const { username, password, role } = createUserDto;
     const getRolesDto = new GetRolesDto();
-    getRolesDto.name = roleName;
+    getRolesDto.name = role;
 
     try {
       const salt = await bcrypt.genSalt(); // default 10 saltRounds
@@ -40,10 +41,7 @@ export class UsersService {
       const role: RoleEntity = roles[0];
 
       if (!role) {
-        throw new NotFoundException(
-          'Role not found: ',
-          JSON.stringify(roleName),
-        );
+        throw new NotFoundException('Role not found: ', JSON.stringify(role));
       }
 
       const user = this.usersRepository.create({
@@ -64,5 +62,16 @@ export class UsersService {
         throw new InternalServerErrorException();
       }
     }
+  }
+
+  async getUserByName(getUserByNameDto: GetUserByNameDto): Promise<UserEntity> {
+    const { username } = getUserByNameDto;
+    const user = await this.usersRepository.findOneBy({ username });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
   }
 }
