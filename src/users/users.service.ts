@@ -1,5 +1,7 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -10,8 +12,8 @@ import { UserEntity } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
-import { RolesService } from 'src/roles/roles.service';
-import { GetRolesDto } from 'src/roles/dto/get-roles.dto';
+import { RolesService } from '../roles/roles.service';
+import { GetRolesDto } from '../roles/dto/get-roles.dto';
 import { GetUserByNameDto } from './dto/get-user-by-name.dto';
 
 @Injectable()
@@ -28,7 +30,7 @@ export class UsersService {
     this.rolesService = rolesService;
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<void> {
+  async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
     const { username, password, role } = createUserDto;
     const getRolesDto = new GetRolesDto();
     getRolesDto.name = role;
@@ -50,7 +52,7 @@ export class UsersService {
         role,
       });
 
-      await this.usersRepository.save(user);
+      return await this.usersRepository.save(user);
     } catch (err) {
       // Postgres duplicate username
       if (err.code === '23505') {

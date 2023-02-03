@@ -5,16 +5,12 @@ import { RecordEntity } from './record.entity';
 import { RecordsService } from './records.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from '../auth/auth.module';
-import { UsersModule } from 'src/users/users.module';
 
 @Module({
   controllers: [RecordsController],
   providers: [RecordsService],
   imports: [
     TypeOrmModule.forFeature([RecordEntity]),
-    UsersModule,
-    AuthModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

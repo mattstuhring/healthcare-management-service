@@ -9,6 +9,7 @@ import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       envFilePath: [`.env.stage.${process.env.STAGE}`],
       validationSchema: ConfigSchemaValidation,
@@ -30,7 +31,6 @@ import { RolesModule } from './roles/roles.module';
         };
       },
     }),
-    AuthModule,
     UsersModule,
     RolesModule,
   ],

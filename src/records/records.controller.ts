@@ -19,15 +19,16 @@ import { DeleteRecordDto } from './dto/delete-record.dto';
 import { UpdateRecordDto } from './dto/update-record.dto';
 import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
 import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
-import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../users/decorators/get-user.decorator';
 import { UserEntity } from '../users/user.entity';
 import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
 import { RolesGuard } from '../roles/roles.guard';
+import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 
+// Private Routes
+@UseGuards(AuthJwtGuard)
 @Controller('records')
-@UseGuards(AuthGuard())
 export class RecordsController {
   private recordsService: RecordsService;
   private logger = new Logger('RecordsController');
@@ -37,6 +38,8 @@ export class RecordsController {
   }
 
   // Access - Admin, Employee
+  @UseGuards(RolesGuard)
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Get()
   getRecords(
     @Query() getRecordsFilterDto: GetRecordsFilterDto,
@@ -45,12 +48,16 @@ export class RecordsController {
   }
 
   // Access - Admin, Employee
+  @UseGuards(RolesGuard)
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Get(':id')
   getRecordById(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
     return this.recordsService.getRecordById(getRecordDto);
   }
 
   // Access - Admin, Employee
+  @UseGuards(RolesGuard)
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Post()
   createRecord(
     @Body() createRecordDto: CreateRecordDto,
@@ -65,6 +72,8 @@ export class RecordsController {
   }
 
   // Access - Admin, Employee
+  @UseGuards(RolesGuard)
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Patch(':id/health-status')
   updateRecordHealth(
     @Param() updateRecordDto: UpdateRecordDto,
