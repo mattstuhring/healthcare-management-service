@@ -1,8 +1,13 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { AuthAccessTokenPayload } from '../auth/constants/auth-access-token-payload.interface';
 
+/* 
+  RBAC Guard
+*/
 @Injectable()
 export class RolesGuard implements CanActivate {
   private reflector: Reflector;
@@ -16,21 +21,36 @@ export class RolesGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): Promise<boolean> | boolean | Observable<boolean> {
-    const roles = this.reflector.get<string[]>('roles', context.getHandler());
+    try {
+      const request = context.switchToHttp().getRequest<Request>();
 
-    if (!roles) {
-      return true;
+      // Get Roles metadata from route
+      // If defined, only those roles should have access to route
+      const roles = this.reflector.get<string[]>('roles', context.getHandler());
+      if (!roles) {
+        return true;
+      }
+
+      // Check if user is authorized
+      const token = this.getToken(request);
+      const isAuthorized = this.authorizer(token, roles);
+
+      return isAuthorized;
+    } catch (err) {
+      console.log(err);
+      return false;
     }
-
-    const request = context.switchToHttp().getRequest();
-    const token = this.getToken(request);
-    const user = this.jwtService.decode(token);
-    request.user = user;
-
-    return roles.includes(request.user.role);
   }
 
-  getToken(request: { headers: Record<string, string | string[]> }): string {
+  // Perform authorization
+  authorizer(token: string, roles: string[]): boolean {
+    const user = this.jwtService.decode(token) as AuthAccessTokenPayload;
+
+    return roles.includes(user.role);
+  }
+
+  // Extract Bearer token from request headers
+  getToken(request: Request): string {
     const authorization = request.headers['authorization'];
 
     if (!authorization || Array.isArray(authorization)) {

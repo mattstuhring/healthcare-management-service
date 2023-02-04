@@ -9,9 +9,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { GetRoleDto } from './dto/get-role.dto';
-import { GetRolesDto } from './dto/get-roles.dto';
+import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
 import { RoleEntity } from './role.entity';
 
+/*
+  Roles Service - Supports role-based access control (RBAC) 
+*/
 @Injectable()
 export class RolesService {
   private rolesRepository: Repository<RoleEntity>;
@@ -23,6 +26,9 @@ export class RolesService {
     this.rolesRepository = rolesRepository;
   }
 
+  /*
+    Create Role [ ADMIN, EMPLOYEE, CUSTOMER ]
+  */
   async createRole(createRoleDto: CreateRoleDto): Promise<RoleEntity> {
     const { name, create, read, update, del } = createRoleDto;
 
@@ -39,7 +45,7 @@ export class RolesService {
 
       return role;
     } catch (error) {
-      // Postgres duplicate username
+      // Postgres duplicate username error code
       if (error.code === '23505') {
         throw new ConflictException('Role already exists');
       } else {
@@ -48,6 +54,9 @@ export class RolesService {
     }
   }
 
+  /*
+    Get Role By ID
+  */
   async getRole(getRoleDto: GetRoleDto): Promise<RoleEntity> {
     const { id } = getRoleDto;
 
@@ -72,24 +81,30 @@ export class RolesService {
     }
   }
 
-  async getRoles(getRolesDto: GetRolesDto): Promise<RoleEntity[]> {
-    const { name } = getRolesDto;
-    const query = this.rolesRepository.createQueryBuilder('role');
-
-    if (name) {
-      query.andWhere('LOWER(role.name) = LOWER(:name)', {
-        name,
-      });
-    }
+  /*
+    Get Role By Name
+  */
+  async getRoleByName(getRoleByNameDto: GetRoleByNameDto): Promise<RoleEntity> {
+    const { name } = getRoleByNameDto;
 
     try {
-      return await query.getMany();
-    } catch (error) {
+      const role: RoleEntity = await this.rolesRepository.findOne({
+        where: {
+          name,
+        },
+      });
+
+      if (!role) {
+        throw new NotFoundException(`Role: ${name}, not found`);
+      }
+
+      return role;
+    } catch (err) {
       this.logger.error(
-        `Failed to get roles. Filters: ${JSON.stringify(getRolesDto)}`,
-        error.stack,
+        `Failed to get role: ${JSON.stringify(getRoleByNameDto)}`,
+        err.stack,
       );
-      throw new InternalServerErrorException();
+      throw new NotFoundException(err.name, err.message);
     }
   }
 }

@@ -26,9 +26,9 @@ import { RoleName } from '../roles/constants/role-name.enum';
 import { RolesGuard } from '../roles/roles.guard';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 
-// Private Routes
-@UseGuards(AuthJwtGuard)
 @Controller('records')
+@UseGuards(AuthJwtGuard)
+@UseGuards(RolesGuard)
 export class RecordsController {
   private recordsService: RecordsService;
   private logger = new Logger('RecordsController');
@@ -37,28 +37,22 @@ export class RecordsController {
     this.recordsService = recordsService;
   }
 
-  // Access - Admin, Employee
-  @UseGuards(RolesGuard)
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Get()
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRecords(
     @Query() getRecordsFilterDto: GetRecordsFilterDto,
   ): Promise<RecordEntity[]> {
     return this.recordsService.getRecords(getRecordsFilterDto);
   }
 
-  // Access - Admin, Employee
-  @UseGuards(RolesGuard)
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Get(':id')
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRecordById(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
     return this.recordsService.getRecordById(getRecordDto);
   }
 
-  // Access - Admin, Employee
-  @UseGuards(RolesGuard)
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Post()
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   createRecord(
     @Body() createRecordDto: CreateRecordDto,
     @GetUser() user: UserEntity,
@@ -71,10 +65,8 @@ export class RecordsController {
     return this.recordsService.createRecord(createRecordDto, user);
   }
 
-  // Access - Admin, Employee
-  @UseGuards(RolesGuard)
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @Patch(':id/health-status')
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   updateRecordHealth(
     @Param() updateRecordDto: UpdateRecordDto,
     @Body() updateRecordHealthDto: UpdateRecordHealthDto,
@@ -85,10 +77,8 @@ export class RecordsController {
     );
   }
 
-  // Access - Admin
-  @UseGuards(RolesGuard)
-  @Roles(RoleName.ADMIN)
   @Delete(':id')
+  @Roles(RoleName.ADMIN)
   @HttpCode(204)
   deleteRecord(
     @Param() deleteRecordDto: DeleteRecordDto,

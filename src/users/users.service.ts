@@ -1,7 +1,5 @@
 import {
   ConflictException,
-  forwardRef,
-  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -13,9 +11,13 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
 import { RolesService } from '../roles/roles.service';
-import { GetRolesDto } from '../roles/dto/get-roles.dto';
+import { GetRoleByNameDto } from '../roles/dto/get-role-by-name.dto';
 import { GetUserByNameDto } from './dto/get-user-by-name.dto';
+import { GetUserDto } from './dto/get-user.dto';
 
+/*
+  User Service - Supports user creation and management
+*/
 @Injectable()
 export class UsersService {
   private usersRepository: Repository<UserEntity>;
@@ -30,44 +32,73 @@ export class UsersService {
     this.rolesService = rolesService;
   }
 
+  /*
+    Create User 
+  */
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
     const { username, password, role } = createUserDto;
-    const getRolesDto = new GetRolesDto();
-    getRolesDto.name = role;
+    const getRoleByNameDto = new GetRoleByNameDto();
+    getRoleByNameDto.name = role;
 
     try {
+      // Encrypt user password
       const salt = await bcrypt.genSalt(); // default 10 saltRounds
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const roles: RoleEntity[] = await this.rolesService.getRoles(getRolesDto);
-      const role: RoleEntity = roles[0];
+      // Retrieve RBAC role to be assigned
+      const role: RoleEntity = await this.rolesService.getRoleByName(
+        getRoleByNameDto,
+      );
 
       if (!role) {
         throw new NotFoundException('Role not found: ', JSON.stringify(role));
       }
 
+      // Create the user entity
       const user = this.usersRepository.create({
         username,
         password: hashedPassword,
         role,
+        refreshToken: '',
       });
 
+      // Save to database
       return await this.usersRepository.save(user);
     } catch (err) {
-      // Postgres duplicate username
+      // Postgres 23505 duplicate username error code
       if (err.code === '23505') {
         throw new ConflictException('Username already exists');
       } else if (err instanceof NotFoundException) {
         console.log('Role not found: ', err.name, err.message);
         throw new NotFoundException(err.name, err.message);
       } else {
+        console.log(err);
         throw new InternalServerErrorException();
       }
     }
   }
 
+  /*
+    Get User By ID
+  */
+  async getUser(getUserDto: GetUserDto): Promise<UserEntity> {
+    const { id } = getUserDto;
+
+    const user = await this.usersRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
+  }
+
+  /*
+    Get User By Name 
+  */
   async getUserByName(getUserByNameDto: GetUserByNameDto): Promise<UserEntity> {
     const { username } = getUserByNameDto;
+
     const user = await this.usersRepository.findOneBy({ username });
 
     if (!user) {
