@@ -38,7 +38,4 @@ export class UserEntity {
   })
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;
-
-  @Column({ name: 'refresh_token' })
-  refreshToken: string;
 }

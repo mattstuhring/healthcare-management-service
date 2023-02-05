@@ -5,9 +5,9 @@ import { Request } from 'express';
 import { Observable } from 'rxjs';
 import { AuthAccessTokenPayload } from '../auth/constants/auth-access-token-payload.interface';
 
-/* 
-  RBAC Guard
-*/
+/**
+ * RBAC Guard for authorization by role
+ */
 @Injectable()
 export class RolesGuard implements CanActivate {
   private reflector: Reflector;

@@ -37,18 +37,18 @@ export class RecordsController {
     this.recordsService = recordsService;
   }
 
+  @Get(':id')
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
+  getRecord(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
+    return this.recordsService.getRecord(getRecordDto);
+  }
+
   @Get()
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRecords(
     @Query() getRecordsFilterDto: GetRecordsFilterDto,
   ): Promise<RecordEntity[]> {
     return this.recordsService.getRecords(getRecordsFilterDto);
-  }
-
-  @Get(':id')
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  getRecordById(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
-    return this.recordsService.getRecordById(getRecordDto);
   }
 
   @Post()

@@ -12,9 +12,9 @@ import { GetRoleDto } from './dto/get-role.dto';
 import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
 import { RoleEntity } from './role.entity';
 
-/*
-  Roles Service - Supports role-based access control (RBAC) 
-*/
+/**
+ * Roles Service - Supports role-based access control (RBAC)
+ */
 @Injectable()
 export class RolesService {
   private rolesRepository: Repository<RoleEntity>;
@@ -26,9 +26,11 @@ export class RolesService {
     this.rolesRepository = rolesRepository;
   }
 
-  /*
-    Create Role [ ADMIN, EMPLOYEE, CUSTOMER ]
-  */
+  /**
+   * Create Role [ ADMIN, EMPLOYEE, CUSTOMER ]
+   * @param createRoleDto
+   * @returns the role
+   */
   async createRole(createRoleDto: CreateRoleDto): Promise<RoleEntity> {
     const { name, create, read, update, del } = createRoleDto;
 
@@ -54,9 +56,11 @@ export class RolesService {
     }
   }
 
-  /*
-    Get Role By ID
-  */
+  /**
+   * Get Role by ID
+   * @param getRoleDto
+   * @returns the role
+   */
   async getRole(getRoleDto: GetRoleDto): Promise<RoleEntity> {
     const { id } = getRoleDto;
 
@@ -81,9 +85,11 @@ export class RolesService {
     }
   }
 
-  /*
-    Get Role By Name
-  */
+  /**
+   * Get Role by Name
+   * @param getRoleByNameDto
+   * @returns the role
+   */
   async getRoleByName(getRoleByNameDto: GetRoleByNameDto): Promise<RoleEntity> {
     const { name } = getRoleByNameDto;
 

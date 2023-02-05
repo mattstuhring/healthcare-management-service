@@ -15,9 +15,9 @@ import { GetRoleByNameDto } from '../roles/dto/get-role-by-name.dto';
 import { GetUserByNameDto } from './dto/get-user-by-name.dto';
 import { GetUserDto } from './dto/get-user.dto';
 
-/*
-  User Service - Supports user creation and management
-*/
+/**
+ * User Service - Supports user creation and management.
+ */
 @Injectable()
 export class UsersService {
   private usersRepository: Repository<UserEntity>;
@@ -32,9 +32,11 @@ export class UsersService {
     this.rolesService = rolesService;
   }
 
-  /*
-    Create User 
-  */
+  /**
+   * Create User
+   * @param createUserDto
+   * @returns the user
+   */
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
     const { username, password, role } = createUserDto;
     const getRoleByNameDto = new GetRoleByNameDto();
@@ -59,10 +61,9 @@ export class UsersService {
         username,
         password: hashedPassword,
         role,
-        refreshToken: '',
       });
 
-      // Save to database
+      // Write to DB
       return await this.usersRepository.save(user);
     } catch (err) {
       // Postgres 23505 duplicate username error code
@@ -78,9 +79,11 @@ export class UsersService {
     }
   }
 
-  /*
-    Get User By ID
-  */
+  /**
+   * Get User by ID
+   * @param getUserDto
+   * @returns the user
+   */
   async getUser(getUserDto: GetUserDto): Promise<UserEntity> {
     const { id } = getUserDto;
 
@@ -93,9 +96,11 @@ export class UsersService {
     return user;
   }
 
-  /*
-    Get User By Name 
-  */
+  /**
+   * Get User by Name
+   * @param getUserByNameDto
+   * @returns the user
+   */
   async getUserByName(getUserByNameDto: GetUserByNameDto): Promise<UserEntity> {
     const { username } = getUserByNameDto;
 

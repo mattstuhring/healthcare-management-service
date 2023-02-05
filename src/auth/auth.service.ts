@@ -13,9 +13,9 @@ import { AuthRefreshTokenPayload } from './constants/auth-refresh-token-payload.
 import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto';
 import { ConfigService } from '@nestjs/config';
 
-/*
-  Auth Service - User authentication & customer creation
-*/
+/**
+ * Auth Service - User authentication & customer creation
+ */
 @Injectable()
 export class AuthService {
   private usersService: UsersService;
@@ -32,9 +32,11 @@ export class AuthService {
     this.configService = configService;
   }
 
-  /*
-    User Sign Up
-  */
+  /**
+   * User Sign Up
+   * @param createUserDto
+   * @returns the user
+   */
   async signup(createUserDto: CreateUserDto): Promise<UserEntity> {
     const { username, password, role } = createUserDto;
 
@@ -46,9 +48,11 @@ export class AuthService {
     return await this.usersService.createUser(user);
   }
 
-  /*
-    User Login
-  */
+  /**
+   * User Login
+   * @param authLoginUserDto
+   * @returns AccessToken and RefreshToken
+   */
   async login(authLoginUserDto: AuthLoginUserDto): Promise<AuthJwtResponse> {
     const { username, password } = authLoginUserDto;
 
@@ -70,7 +74,7 @@ export class AuthService {
         throw new Error();
       }
 
-      // Create JWT token w/ AccessToken & RefreshToken
+      // Create JWT AccessToken & RefreshToken
       const authJwtResponse: AuthJwtResponse = this.createJwt(user);
 
       return authJwtResponse;
@@ -81,9 +85,27 @@ export class AuthService {
     }
   }
 
-  /*
-    User Refresh Token
-  */
+  /**
+   * User Logout
+   * @param authLoginUserDto
+   * @returns message
+   */
+  async logout(): Promise<{ message: string }> {
+    /*
+      Tokens for this project are short-lived
+        - AccessToken exp 30 minutes
+        - RefreshToken exp 24 hours
+      Client needs to invalidate the user session
+      Future implementations could support RefreshToken management for more robust secruity
+    */
+    return { message: 'Successful logout' };
+  }
+
+  /**
+   * User Refresh Token
+   * @param authRefreshTokenDto
+   * @returns AcessToken and RefreshToken
+   */
   async refreshToken(
     authRefreshTokenDto: AuthRefreshTokenDto,
   ): Promise<AuthJwtResponse> {
@@ -114,9 +136,11 @@ export class AuthService {
     }
   }
 
-  /*
-    Helper function to create JWT w/ AccessToken & RefreshToken
-  */
+  /**
+   * Helper function to create JWT AccessToken & RefreshToken
+   * @param user
+   * @returns AcessToken and RefreshToken
+   */
   private createJwt(user: UserEntity): AuthJwtResponse {
     const { username, role } = user;
 

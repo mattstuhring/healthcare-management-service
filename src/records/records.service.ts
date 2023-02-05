@@ -17,6 +17,9 @@ import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
 import { RecordEntity } from './record.entity';
 import { UserEntity } from '../users/user.entity';
 
+/**
+ * Records Service - Supports CRUD operations for managing heath records.
+ */
 @Injectable()
 export class RecordsService {
   private recordsRepository: Repository<RecordEntity>;
@@ -28,20 +31,23 @@ export class RecordsService {
     this.recordsRepository = recordsRepository;
   }
 
+  /**
+   * Get Records Filter
+   * @param getRecordsFilterDto
+   * @returns filtered records
+   */
   async getRecords(
     getRecordsFilterDto: GetRecordsFilterDto,
   ): Promise<RecordEntity[]> {
     const { typeOfCare, search } = getRecordsFilterDto;
     const query = this.recordsRepository.createQueryBuilder('record');
 
-    // Case insensitive search using LOWER()
     if (typeOfCare) {
       query.andWhere('LOWER(record.typeOfCare) = LOWER(:typeOfCare)', {
         typeOfCare,
       });
     }
 
-    // Case insensitive search using LOWER()
     if (search) {
       query.andWhere(
         'LOWER(record.name) = LOWER(:name) OR LOWER(record.dateOfBirth) = LOWER(:dateOfBirth) OR LOWER(record.healthStatus) = LOWER(:healthStatus)',
@@ -63,7 +69,12 @@ export class RecordsService {
     }
   }
 
-  async getRecordById(getRecordDto: GetRecordDto): Promise<RecordEntity> {
+  /**
+   * Get Record By ID
+   * @param getRecordDto
+   * @returns the record
+   */
+  async getRecord(getRecordDto: GetRecordDto): Promise<RecordEntity> {
     const { id } = getRecordDto;
     const record: RecordEntity = await this.recordsRepository.findOne({
       where: {
@@ -78,6 +89,12 @@ export class RecordsService {
     return record;
   }
 
+  /**
+   * Create Record
+   * @param createRecordDto
+   * @param user
+   * @returns the record
+   */
   async createRecord(
     createRecordDto: CreateRecordDto,
     user: UserEntity,
@@ -97,12 +114,18 @@ export class RecordsService {
     return record;
   }
 
+  /**
+   * Update record with new health status
+   * @param updateRecordDto
+   * @param updateRecordHealthDto
+   * @returns the record
+   */
   async updateRecordHealthStatus(
     updateRecordDto: UpdateRecordDto,
     updateRecordHealthDto: UpdateRecordHealthDto,
   ): Promise<RecordEntity> {
     const { healthStatus } = updateRecordHealthDto;
-    const record = await this.getRecordById(updateRecordDto);
+    const record = await this.getRecord(updateRecordDto);
     record.healthStatus = healthStatus;
 
     await this.recordsRepository.save(record);
@@ -110,6 +133,11 @@ export class RecordsService {
     return record;
   }
 
+  /**
+   * Delete Record
+   * @param deleteRecordDto
+   * @param user
+   */
   async deleteRecord(
     deleteRecordDto: DeleteRecordDto,
     user: UserEntity,
