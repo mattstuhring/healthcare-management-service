@@ -2,7 +2,7 @@
 
 ## Description
 
-Backend REST API service for healthcare management.
+Healthcare management REST API.
 
 ## Getting Started
 

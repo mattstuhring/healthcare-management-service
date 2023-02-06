@@ -1,45 +1,45 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
 import { RoleName } from '../constants/role-name.enum';
 
-export class CreateRoleDto {
+export class UpdateRoleDto {
   @ApiProperty({
     enum: RoleName,
     description: 'This is a required property',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(RoleName)
-  name: RoleName;
+  name?: RoleName;
 
   @ApiProperty({
     type: Boolean,
     description: 'This is a required property',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
-  create: boolean;
+  create?: boolean;
 
   @ApiProperty({
     type: Boolean,
     description: 'This is a required property',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
-  read: boolean;
+  read?: boolean;
 
   @ApiProperty({
     type: Boolean,
     description: 'This is a required property',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
-  update: boolean;
+  update?: boolean;
 
   @ApiProperty({
     type: Boolean,
     description: 'This is a required property',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsBoolean()
-  del: boolean;
+  del?: boolean;
 }

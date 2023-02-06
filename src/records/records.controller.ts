@@ -19,13 +19,24 @@ import { DeleteRecordDto } from './dto/delete-record.dto';
 import { UpdateRecordDto } from './dto/update-record.dto';
 import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
 import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
-import { GetUser } from '../users/decorators/get-user.decorator';
-import { UserEntity } from '../users/user.entity';
 import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
 import { RolesGuard } from '../roles/roles.guard';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  ApiUnprocessableEntityResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('Records')
 @Controller('records')
 @UseGuards(AuthJwtGuard)
 @UseGuards(RolesGuard)
@@ -37,13 +48,40 @@ export class RecordsController {
     this.recordsService = recordsService;
   }
 
-  @Get(':id')
+  @Post()
+  @ApiCreatedResponse({ description: 'Created Succesfully' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  getRecord(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
+  @HttpCode(201)
+  createRecord(
+    @Body() createRecordDto: CreateRecordDto,
+  ): Promise<RecordEntity> {
+    this.logger.verbose(
+      `Creating new record: ${JSON.stringify(createRecordDto)}`,
+    );
+    return this.recordsService.createRecord(createRecordDto);
+  }
+
+  @Get(':id')
+  @ApiOkResponse({ description: 'The resource was returned successfully' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
+  getRecord(@Param('id') getRecordDto: GetRecordDto): Promise<RecordEntity> {
     return this.recordsService.getRecord(getRecordDto);
   }
 
   @Get()
+  @ApiOkResponse({ description: 'The resource was returned successfully' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRecords(
     @Query() getRecordsFilterDto: GetRecordsFilterDto,
@@ -51,39 +89,48 @@ export class RecordsController {
     return this.recordsService.getRecords(getRecordsFilterDto);
   }
 
-  @Post()
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  createRecord(
-    @Body() createRecordDto: CreateRecordDto,
-    @GetUser() user: UserEntity,
-  ): Promise<RecordEntity> {
-    this.logger.verbose(
-      `User ${user.username} creating new record: ${JSON.stringify(
-        createRecordDto,
-      )}`,
-    );
-    return this.recordsService.createRecord(createRecordDto, user);
-  }
-
   @Patch(':id/health-status')
+  @ApiOkResponse({ description: 'The resource was updated successfully' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  updateRecordHealth(
-    @Param() updateRecordDto: UpdateRecordDto,
+  updateRecordHealthStatus(
+    @Param('id') getRecordDto: GetRecordDto,
     @Body() updateRecordHealthDto: UpdateRecordHealthDto,
   ): Promise<RecordEntity> {
     return this.recordsService.updateRecordHealthStatus(
-      updateRecordDto,
+      getRecordDto,
       updateRecordHealthDto,
     );
   }
 
+  @Patch(':id')
+  @ApiOkResponse({ description: 'The resource was updated successfully' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
+  updateRecord(
+    @Param('id') getRecordDto: GetRecordDto,
+    @Body() updateRecordDto: UpdateRecordDto,
+  ): Promise<RecordEntity> {
+    return this.recordsService.updateRecord(getRecordDto, updateRecordDto);
+  }
+
   @Delete(':id')
+  @ApiNoContentResponse({
+    description: 'The resource was returned successfully',
+  })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
+  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiNotFoundResponse({ description: 'Resource not found' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
-  deleteRecord(
-    @Param() deleteRecordDto: DeleteRecordDto,
-    @GetUser() user: UserEntity,
-  ): Promise<void> {
-    return this.recordsService.deleteRecord(deleteRecordDto, user);
+  deleteRecord(@Param('id') deleteRecordDto: DeleteRecordDto): Promise<void> {
+    return this.recordsService.deleteRecord(deleteRecordDto);
   }
 }

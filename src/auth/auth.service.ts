@@ -87,7 +87,6 @@ export class AuthService {
 
   /**
    * User Logout
-   * @param authLoginUserDto
    * @returns message
    */
   async logout(): Promise<{ message: string }> {

@@ -1,9 +1,9 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
   Logger,
   InternalServerErrorException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,6 +16,8 @@ import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
 import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
 import { RecordEntity } from './record.entity';
 import { UserEntity } from '../users/user.entity';
+import { UsersService } from 'src/users/users.service';
+import { GetUserDto } from 'src/users/dto/get-user.dto';
 
 /**
  * Records Service - Supports CRUD operations for managing heath records.
@@ -23,12 +25,59 @@ import { UserEntity } from '../users/user.entity';
 @Injectable()
 export class RecordsService {
   private recordsRepository: Repository<RecordEntity>;
+  private userService: UsersService;
   private logger = new Logger('RecordsService', { timestamp: true });
 
   constructor(
     @InjectRepository(RecordEntity) recordsRepository: Repository<RecordEntity>,
+    userService: UsersService,
   ) {
     this.recordsRepository = recordsRepository;
+    this.userService = userService;
+  }
+
+  /**
+   * Create Record
+   * @param createRecordDto
+   * @returns the record
+   */
+  async createRecord(createRecordDto: CreateRecordDto): Promise<RecordEntity> {
+    const { name, dateOfBirth, typeOfCare, userId } = createRecordDto;
+
+    const getUserDto: GetUserDto = new GetUserDto();
+    getUserDto.id = userId;
+    const user: UserEntity = await this.userService.getUser(getUserDto);
+
+    const record = this.recordsRepository.create({
+      name,
+      dateOfBirth,
+      typeOfCare,
+      healthStatus: HealthStatus.UNKNOWN,
+      updatedAt: new Date(),
+      user,
+    });
+
+    return await this.recordsRepository.save(record);
+  }
+
+  /**
+   * Get Record By ID
+   * @param getRecordDto
+   * @returns the record
+   */
+  async getRecord(getRecordDto: GetRecordDto): Promise<RecordEntity> {
+    const { id } = getRecordDto;
+    const record: RecordEntity = await this.recordsRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!record) {
+      throw new NotFoundException(`Record with ID: ${id} not found`);
+    }
+
+    return record;
   }
 
   /**
@@ -70,67 +119,64 @@ export class RecordsService {
   }
 
   /**
-   * Get Record By ID
-   * @param getRecordDto
-   * @returns the record
-   */
-  async getRecord(getRecordDto: GetRecordDto): Promise<RecordEntity> {
-    const { id } = getRecordDto;
-    const record: RecordEntity = await this.recordsRepository.findOne({
-      where: {
-        id,
-      },
-    });
-
-    if (!record) {
-      throw new NotFoundException(`Record with ID: ${id} not found`);
-    }
-
-    return record;
-  }
-
-  /**
-   * Create Record
-   * @param createRecordDto
-   * @param user
-   * @returns the record
-   */
-  async createRecord(
-    createRecordDto: CreateRecordDto,
-    user: UserEntity,
-  ): Promise<RecordEntity> {
-    const { name, dateOfBirth, typeOfCare } = createRecordDto;
-    const record = this.recordsRepository.create({
-      name,
-      dateOfBirth,
-      typeOfCare,
-      healthStatus: HealthStatus.UNKNOWN,
-      updatedAt: new Date(),
-      user,
-    });
-
-    await this.recordsRepository.save(record);
-
-    return record;
-  }
-
-  /**
    * Update record with new health status
-   * @param updateRecordDto
+   * @param getRecordDto
    * @param updateRecordHealthDto
    * @returns the record
    */
   async updateRecordHealthStatus(
-    updateRecordDto: UpdateRecordDto,
+    getRecordDto: GetRecordDto,
     updateRecordHealthDto: UpdateRecordHealthDto,
   ): Promise<RecordEntity> {
     const { healthStatus } = updateRecordHealthDto;
-    const record = await this.getRecord(updateRecordDto);
+
+    const record = await this.getRecord(getRecordDto);
     record.healthStatus = healthStatus;
 
-    await this.recordsRepository.save(record);
+    return await this.recordsRepository.save(record);
+  }
 
-    return record;
+  /**
+   * Update record
+   * @param getRecordDto
+   * @param updateRecordHealthDto
+   * @returns the record
+   */
+  async updateRecord(
+    getRecordDto: GetRecordDto,
+    updateRecordDto: UpdateRecordDto,
+  ): Promise<RecordEntity> {
+    const { name, dateOfBirth, typeOfCare, healthStatus } = updateRecordDto;
+
+    // Empty request body
+    if (!name && !dateOfBirth && !typeOfCare && !healthStatus) {
+      throw new BadRequestException();
+    }
+
+    // Retrieve record
+    const record = await this.getRecord(getRecordDto);
+
+    // Update name
+    if (name) {
+      record.name = name;
+    }
+
+    // Update date of birth
+    if (dateOfBirth) {
+      record.dateOfBirth = dateOfBirth;
+    }
+
+    // Update type of care
+    if (typeOfCare) {
+      record.typeOfCare = typeOfCare;
+    }
+
+    // Update health status
+    if (healthStatus) {
+      record.healthStatus = healthStatus;
+    }
+
+    return await this.recordsRepository.save(record);
   }
 
   /**
@@ -138,19 +184,14 @@ export class RecordsService {
    * @param deleteRecordDto
    * @param user
    */
-  async deleteRecord(
-    deleteRecordDto: DeleteRecordDto,
-    user: UserEntity,
-  ): Promise<void> {
-    if (user) {
-      const { id } = deleteRecordDto;
-      const result = await this.recordsRepository.delete(id);
+  async deleteRecord(deleteRecordDto: DeleteRecordDto): Promise<void> {
+    const { id } = deleteRecordDto;
+    const result = await this.recordsRepository.delete(id);
 
-      if (result.affected === 0) {
-        throw new NotFoundException(`Record with ID: ${id} not found`);
-      }
-    } else {
-      throw new UnauthorizedException();
+    if (result.affected === 0) {
+      throw new NotFoundException(`Record with ID: ${id} not found`);
     }
+
+    return;
   }
 }

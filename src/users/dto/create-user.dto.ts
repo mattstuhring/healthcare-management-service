@@ -1,5 +1,8 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
+  IsEmail,
   IsEnum,
+  IsNotEmpty,
   IsString,
   Matches,
   MaxLength,
@@ -8,9 +11,12 @@ import {
 import { RoleName } from '../../roles/constants/role-name.enum';
 
 export class CreateUserDto {
-  @IsString()
-  @MinLength(4)
-  @MaxLength(20)
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNotEmpty()
+  @IsEmail()
   username: string;
 
   /*
@@ -20,6 +26,11 @@ export class CreateUserDto {
       - Passwords will contain at least 1 number or special character
       - There is no length validation (min, max) in this regex!
   */
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNotEmpty()
   @IsString()
   @MinLength(8)
   @MaxLength(32)
@@ -28,6 +39,10 @@ export class CreateUserDto {
   })
   password: string;
 
+  @ApiPropertyOptional({
+    enum: RoleName,
+    description: 'This is an optional property',
+  })
   @IsEnum(RoleName)
   role?: RoleName;
 }

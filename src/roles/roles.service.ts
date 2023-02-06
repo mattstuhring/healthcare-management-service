@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Logger,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,6 +12,8 @@ import { CreateRoleDto } from './dto/create-role.dto';
 import { GetRoleDto } from './dto/get-role.dto';
 import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
 import { RoleEntity } from './role.entity';
+import { DeleteRoleDto } from './dto/delete-role.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
 
 /**
  * Roles Service - Supports role-based access control (RBAC)
@@ -112,5 +115,69 @@ export class RolesService {
       );
       throw new NotFoundException(err.name, err.message);
     }
+  }
+
+  /**
+   * Update Role
+   * @param getRoleDto
+   * @param updateRoleDto
+   * @returns the user
+   */
+  async updateRole(
+    getRoleDto: GetRoleDto,
+    updateRoleDto: UpdateRoleDto,
+  ): Promise<RoleEntity> {
+    const { name, create, read, update, del } = updateRoleDto;
+
+    // Empty request body
+    if (!name && !create && !read && !update && !del) {
+      throw new BadRequestException();
+    }
+
+    // Retrieve role
+    const role: RoleEntity = await this.getRole(getRoleDto);
+
+    // Update name
+    if (name) {
+      role.name = name;
+    }
+
+    // Update create
+    if (create) {
+      role.create = create;
+    }
+
+    // Update read
+    if (read) {
+      role.read = read;
+    }
+
+    // Update update
+    if (update) {
+      role.update = update;
+    }
+
+    // Update delete
+    if (del) {
+      role.delete = del;
+    }
+
+    return await this.rolesRepository.save(role);
+  }
+
+  /**
+   * Delete Role
+   * @param deleteRoleDto
+   */
+  async deleteRole(deleteRoleDto: DeleteRoleDto): Promise<void> {
+    const { id } = deleteRoleDto;
+
+    const result = await this.rolesRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Role with ID: ${id} not found`);
+    }
+
+    return;
   }
 }

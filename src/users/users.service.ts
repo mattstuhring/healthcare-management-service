@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -14,6 +15,8 @@ import { RolesService } from '../roles/roles.service';
 import { GetRoleByNameDto } from '../roles/dto/get-role-by-name.dto';
 import { GetUserByNameDto } from './dto/get-user-by-name.dto';
 import { GetUserDto } from './dto/get-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 /**
  * User Service - Supports user creation and management.
@@ -63,7 +66,6 @@ export class UsersService {
         role,
       });
 
-      // Write to DB
       return await this.usersRepository.save(user);
     } catch (err) {
       // Postgres 23505 duplicate username error code
@@ -111,5 +113,61 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  /**
+   * Update User
+   * @param getUserDto
+   * @param updateUserDto
+   * @returns the user
+   */
+  async updateUser(
+    getUserDto: GetUserDto,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserEntity> {
+    const { username, roleName } = updateUserDto;
+
+    // Empty request body
+    if (!username && !roleName) {
+      throw new BadRequestException();
+    }
+
+    // Retrieve user
+    const user: UserEntity = await this.getUser(getUserDto);
+
+    // Update username
+    if (username) {
+      user.username = username;
+    }
+
+    // Update user role
+    if (roleName) {
+      const getRoleByNameDto: GetRoleByNameDto = new GetRoleByNameDto();
+      getRoleByNameDto.name = roleName;
+
+      const role: RoleEntity = await this.rolesService.getRoleByName(
+        getRoleByNameDto,
+      );
+
+      user.role = role;
+    }
+
+    return await this.usersRepository.save(user);
+  }
+
+  /**
+   * Delete User
+   * @param deleteUserDto
+   */
+  async deleteUser(deleteUserDto: DeleteUserDto): Promise<void> {
+    const { id } = deleteUserDto;
+
+    const result = await this.usersRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`User with ID: ${id} not found`);
+    }
+
+    return;
   }
 }
