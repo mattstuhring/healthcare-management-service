@@ -8,7 +8,6 @@ import { AuthJwtGuard } from './auth-jwt.guard';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
-  ApiForbiddenResponse,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,

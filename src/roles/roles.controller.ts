@@ -29,7 +29,6 @@ import {
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { DeleteRoleDto } from './dto/delete-role.dto';

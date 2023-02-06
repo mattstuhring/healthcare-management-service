@@ -33,7 +33,6 @@ import {
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
-  ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
 
 @ApiTags('Records')
