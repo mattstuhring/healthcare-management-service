@@ -59,7 +59,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Healthcare Management Service')
-    .setDescription('Healthcare management REST API.')
+    .setDescription('REST API documentation')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config, option);
