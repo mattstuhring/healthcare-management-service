@@ -11,14 +11,15 @@ import {
 } from '@nestjs/common';
 import { RolesGuard } from '../roles/roles.guard';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
-import { CreateUserDto } from './dto/create-user.dto';
-import { GetUserByNameDto } from './dto/get-user-by-name.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { GetUserByNameDto } from './dtos/get-user-by-name.dto';
 import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
 import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -26,12 +27,13 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { GetUserDto } from './dto/get-user.dto';
-import { DeleteUserDto } from './dto/delete-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
+import { GetUserDto } from './dtos/get-user.dto';
+import { DeleteUserDto } from './dtos/delete-user.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -64,6 +66,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getUser(@Param('id') getUserDto: GetUserDto): Promise<UserEntity> {
     return this.usersService.getUser(getUserDto);
@@ -75,6 +78,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getUserByName(
     @Param('username') getUserByNameDto: GetUserByNameDto,
@@ -88,6 +92,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   updateUser(
     @Param('id') getUserDto: GetUserDto,
@@ -104,6 +109,7 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
   deleteUser(@Param('id') deleteUserDto: DeleteUserDto): Promise<void> {

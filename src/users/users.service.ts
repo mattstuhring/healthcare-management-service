@@ -8,15 +8,15 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
 import { RolesService } from '../roles/roles.service';
-import { GetRoleByNameDto } from '../roles/dto/get-role-by-name.dto';
-import { GetUserByNameDto } from './dto/get-user-by-name.dto';
-import { GetUserDto } from './dto/get-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { DeleteUserDto } from './dto/delete-user.dto';
+import { GetRoleByNameDto } from '../roles/dtos/get-role-by-name.dto';
+import { GetUserByNameDto } from './dtos/get-user-by-name.dto';
+import { GetUserDto } from './dtos/get-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
+import { DeleteUserDto } from './dtos/delete-user.dto';
 
 /**
  * User Service - Supports user creation and management.

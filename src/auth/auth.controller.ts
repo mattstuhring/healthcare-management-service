@@ -1,9 +1,9 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { AuthLoginUserDto } from './dto/auth-login-user.dto';
+import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { AuthJwtResponse } from './constants/auth-jwt-response.interface';
-import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto';
+import { CreateUserDto } from '../users/dtos/create-user.dto';
+import { AuthJwtResponse } from './models/auth-jwt-response.interface';
+import { AuthRefreshTokenDto } from './dtos/auth-refresh-token.dto';
 import { AuthJwtGuard } from './auth-jwt.guard';
 import {
   ApiBadRequestResponse,
@@ -30,13 +30,14 @@ export class AuthController {
   @ApiBadRequestResponse({ description: 'Bad request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  signup(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+  signUpCustomer(@Body() createUserDto: CreateUserDto) {
+    return this.authService.signUpCustomer(createUserDto);
   }
 
   @Post('login')
   @ApiOkResponse({ description: 'The resource was returned successfully' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   login(@Body() authLoginUserDto: AuthLoginUserDto): Promise<AuthJwtResponse> {
     return this.authService.login(authLoginUserDto);
   }
@@ -45,6 +46,7 @@ export class AuthController {
   @ApiOkResponse({ description: 'The resource was returned successfully' })
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @UseGuards(AuthJwtGuard)
   logout(): Promise<{ message: string }> {
     return this.authService.logout();
@@ -54,6 +56,8 @@ export class AuthController {
   @ApiOkResponse({ description: 'The resource was returned successfully' })
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @UseGuards(AuthJwtGuard)
   refreshToken(
     @Body() authRefreshTokenDto: AuthRefreshTokenDto,
   ): Promise<AuthJwtResponse> {

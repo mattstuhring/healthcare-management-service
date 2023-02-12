@@ -6,25 +6,25 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { AuthLoginUserDto } from './auth/dto/auth-login-user.dto';
-import { AuthRefreshTokenDto } from './auth/dto/auth-refresh-token.dto';
-import { CreateRecordDto } from './records/dto/create-record.dto';
-import { DeleteRecordDto } from './records/dto/delete-record.dto';
-import { GetRecordDto } from './records/dto/get-record.dto';
-import { GetRecordsFilterDto } from './records/dto/get-records-filter.dto';
-import { UpdateRecordHealthDto } from './records/dto/update-record-health.dto';
-import { UpdateRecordDto } from './records/dto/update-record.dto';
-import { CreateRoleDto } from './roles/dto/create-role.dto';
-import { DeleteRoleDto } from './roles/dto/delete-role.dto';
-import { GetRoleByNameDto } from './roles/dto/get-role-by-name.dto';
-import { GetRoleDto } from './roles/dto/get-role.dto';
-import { UpdateRoleDto } from './roles/dto/update-role.dto';
+import { AuthLoginUserDto } from './auth/dtos/auth-login-user.dto';
+import { AuthRefreshTokenDto } from './auth/dtos/auth-refresh-token.dto';
+import { CreateRecordDto } from './records/dtos/create-record.dto';
+import { DeleteRecordDto } from './records/dtos/delete-record.dto';
+import { GetRecordDto } from './records/dtos/get-record.dto';
+import { GetRecordsFilterDto } from './records/dtos/get-records-filter.dto';
+import { UpdateRecordHealthDto } from './records/dtos/update-record-health.dto';
+import { UpdateRecordDto } from './records/dtos/update-record.dto';
+import { CreateRoleDto } from './roles/dtos/create-role.dto';
+import { DeleteRoleDto } from './roles/dtos/delete-role.dto';
+import { GetRoleByNameDto } from './roles/dtos/get-role-by-name.dto';
+import { GetRoleDto } from './roles/dtos/get-role.dto';
+import { UpdateRoleDto } from './roles/dtos/update-role.dto';
 import { TransformInterceptor } from './transform.interceptor';
-import { CreateUserDto } from './users/dto/create-user.dto';
-import { DeleteUserDto } from './users/dto/delete-user.dto';
-import { GetUserByNameDto } from './users/dto/get-user-by-name.dto';
-import { GetUserDto } from './users/dto/get-user.dto';
-import { UpdateUserDto } from './users/dto/update-user.dto';
+import { CreateUserDto } from './users/dtos/create-user.dto';
+import { DeleteUserDto } from './users/dtos/delete-user.dto';
+import { GetUserByNameDto } from './users/dtos/get-user-by-name.dto';
+import { GetUserDto } from './users/dtos/get-user.dto';
+import { UpdateUserDto } from './users/dtos/update-user.dto';
 
 async function bootstrap() {
   const logger = new Logger();
@@ -61,6 +61,13 @@ async function bootstrap() {
     .setTitle('Healthcare Management Service')
     .setDescription('REST API documentation')
     .setVersion('1.0')
+    .addBearerAuth({
+      type: 'http',
+      description: 'Default',
+      in: 'header',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config, option);
   SwaggerModule.setup('api', app, document);

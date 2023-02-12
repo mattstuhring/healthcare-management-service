@@ -13,12 +13,12 @@ import {
 } from '@nestjs/common';
 import { RecordsService } from './records.service';
 import { RecordEntity } from './record.entity';
-import { CreateRecordDto } from './dto/create-record.dto';
-import { GetRecordDto } from './dto/get-record.dto';
-import { DeleteRecordDto } from './dto/delete-record.dto';
-import { UpdateRecordDto } from './dto/update-record.dto';
-import { UpdateRecordHealthDto } from './dto/update-record-health.dto';
-import { GetRecordsFilterDto } from './dto/get-records-filter.dto';
+import { CreateRecordDto } from './dtos/create-record.dto';
+import { GetRecordDto } from './dtos/get-record.dto';
+import { DeleteRecordDto } from './dtos/delete-record.dto';
+import { UpdateRecordDto } from './dtos/update-record.dto';
+import { UpdateRecordHealthDto } from './dtos/update-record-health.dto';
+import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
 import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
 import { RolesGuard } from '../roles/roles.guard';
@@ -52,6 +52,7 @@ export class RecordsController {
   @ApiBadRequestResponse({ description: 'Bad Request' })
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @HttpCode(201)
   createRecord(
@@ -69,6 +70,7 @@ export class RecordsController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRecord(@Param('id') getRecordDto: GetRecordDto): Promise<RecordEntity> {
     return this.recordsService.getRecord(getRecordDto);
@@ -94,6 +96,7 @@ export class RecordsController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   updateRecordHealthStatus(
     @Param('id') getRecordDto: GetRecordDto,
@@ -111,6 +114,7 @@ export class RecordsController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   updateRecord(
     @Param('id') getRecordDto: GetRecordDto,
@@ -127,6 +131,7 @@ export class RecordsController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
   deleteRecord(@Param('id') deleteRecordDto: DeleteRecordDto): Promise<void> {

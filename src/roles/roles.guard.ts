@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { AuthAccessTokenPayload } from '../auth/constants/auth-access-token-payload.interface';
+import { AuthAccessTokenPayload } from '../auth/models/auth-access-token-payload.interface';
 
 /**
  * RBAC Guard for authorization by role

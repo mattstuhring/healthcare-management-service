@@ -1,16 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthLoginUserDto } from './dto/auth-login-user.dto';
+import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { AuthAccessTokenPayload } from './constants/auth-access-token-payload.interface';
+import { AuthAccessTokenPayload } from './models/auth-access-token-payload.interface';
 import { UsersService } from '../users/users.service';
-import { GetUserByNameDto } from '../users/dto/get-user-by-name.dto';
+import { GetUserByNameDto } from '../users/dtos/get-user-by-name.dto';
 import { UserEntity } from '../users/user.entity';
-import { AuthJwtResponse } from './constants/auth-jwt-response.interface';
-import { CreateUserDto } from '../users/dto/create-user.dto';
+import { AuthJwtResponse } from './models/auth-jwt-response.interface';
+import { CreateUserDto } from '../users/dtos/create-user.dto';
 import { RoleName } from '../roles/constants/role-name.enum';
-import { AuthRefreshTokenPayload } from './constants/auth-refresh-token-payload.interface';
-import { AuthRefreshTokenDto } from './dto/auth-refresh-token.dto';
+import { AuthRefreshTokenPayload } from './models/auth-refresh-token-payload.interface';
+import { AuthRefreshTokenDto } from './dtos/auth-refresh-token.dto';
 import { ConfigService } from '@nestjs/config';
 
 /**
@@ -33,17 +33,17 @@ export class AuthService {
   }
 
   /**
-   * User Sign Up
+   * Customer Sign Up
    * @param createUserDto
    * @returns the user
    */
-  async signup(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { username, password, role } = createUserDto;
+  async signUpCustomer(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const { username, password } = createUserDto;
 
     const user = new CreateUserDto();
     user.password = password;
     user.username = username;
-    user.role = role ? role : RoleName.CUSTOMER;
+    user.role = RoleName.CUSTOMER;
 
     return await this.usersService.createUser(user);
   }

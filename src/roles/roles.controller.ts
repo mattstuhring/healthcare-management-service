@@ -12,9 +12,9 @@ import {
 } from '@nestjs/common';
 import { RoleName } from './constants/role-name.enum';
 import { Roles } from './decorators/roles.decorator';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { GetRoleDto } from './dto/get-role.dto';
-import { GetRoleByNameDto } from './dto/get-role-by-name.dto';
+import { CreateRoleDto } from './dtos/create-role.dto';
+import { GetRoleDto } from './dtos/get-role.dto';
+import { GetRoleByNameDto } from './dtos/get-role-by-name.dto';
 import { RoleEntity } from './role.entity';
 import { RolesGuard } from './roles.guard';
 import { RolesService } from './roles.service';
@@ -24,14 +24,15 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { DeleteRoleDto } from './dto/delete-role.dto';
+import { UpdateRoleDto } from './dtos/update-role.dto';
+import { DeleteRoleDto } from './dtos/delete-role.dto';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -51,6 +52,7 @@ export class RolesController {
   @ApiConflictResponse({ description: 'Duplicate entity' })
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(201)
   createRole(@Body() createRoleDto: CreateRoleDto): Promise<RoleEntity> {
@@ -63,6 +65,7 @@ export class RolesController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   getRole(@Param('id') getRoleDto: GetRoleDto): Promise<RoleEntity> {
     return this.rolesService.getRole(getRoleDto);
@@ -74,6 +77,7 @@ export class RolesController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   getRoleByName(
     @Param('name') getRoleByNameDto: GetRoleByNameDto,
@@ -103,6 +107,7 @@ export class RolesController {
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
   deleteRole(@Param('id') deleteRoleDto: DeleteRoleDto): Promise<void> {
