@@ -16,8 +16,8 @@ import { UpdateRecordHealthDto } from './dtos/update-record-health.dto';
 import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
 import { RecordEntity } from './record.entity';
 import { UserEntity } from '../users/user.entity';
-import { UsersService } from 'src/users/users.service';
-import { GetUserDto } from 'src/users/dtos/get-user.dto';
+import { UsersService } from '../users/users.service';
+import { GetUserDto } from '../users/dtos/get-user.dto';
 
 /**
  * Records Service - Supports CRUD operations for managing heath records.

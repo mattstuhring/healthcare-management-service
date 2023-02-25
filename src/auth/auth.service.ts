@@ -43,7 +43,7 @@ export class AuthService {
     const user = new CreateUserDto();
     user.password = password;
     user.username = username;
-    user.role = RoleName.CUSTOMER;
+    user.roleName = RoleName.CUSTOMER;
 
     return await this.usersService.createUser(user);
   }
@@ -146,7 +146,7 @@ export class AuthService {
     // Create AccessToken expiresIn 30 minutes
     const accessPayload: AuthAccessTokenPayload = {
       username,
-      role: role.name,
+      role,
     };
     const accessToken: string = this.jwtService.sign(accessPayload);
 

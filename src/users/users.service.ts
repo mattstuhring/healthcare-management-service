@@ -17,6 +17,7 @@ import { GetUserByNameDto } from './dtos/get-user-by-name.dto';
 import { GetUserDto } from './dtos/get-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
+import { RoleName } from '../roles/constants/role-name.enum';
 
 /**
  * User Service - Supports user creation and management.
@@ -41,23 +42,14 @@ export class UsersService {
    * @returns the user
    */
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { username, password, role } = createUserDto;
-    const getRoleByNameDto = new GetRoleByNameDto();
-    getRoleByNameDto.name = role;
+    const { username, password, roleName } = createUserDto;
 
     try {
       // Encrypt user password
-      const salt = await bcrypt.genSalt(); // default 10 saltRounds
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword: string = await this.encryptPassword(password);
 
       // Retrieve RBAC role to be assigned
-      const role: RoleEntity = await this.rolesService.getRoleByName(
-        getRoleByNameDto,
-      );
-
-      if (!role) {
-        throw new NotFoundException('Role not found: ', JSON.stringify(role));
-      }
+      const role: RoleEntity = await this.getRoleByName(roleName);
 
       // Create the user entity
       const user = this.usersRepository.create({
@@ -142,13 +134,7 @@ export class UsersService {
 
     // Update user role
     if (roleName) {
-      const getRoleByNameDto: GetRoleByNameDto = new GetRoleByNameDto();
-      getRoleByNameDto.name = roleName;
-
-      const role: RoleEntity = await this.rolesService.getRoleByName(
-        getRoleByNameDto,
-      );
-
+      const role: RoleEntity = await this.getRoleByName(roleName);
       user.role = role;
     }
 
@@ -169,5 +155,27 @@ export class UsersService {
     }
 
     return;
+  }
+
+  // Encrypt user password w/default 10 saltRounds
+  private async encryptPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    return await bcrypt.hash(password, salt);
+  }
+
+  // Retrieve RBAC role by name
+  private async getRoleByName(roleName: RoleName): Promise<RoleEntity> {
+    const getRoleByNameDto = new GetRoleByNameDto();
+    getRoleByNameDto.name = roleName;
+
+    const role: RoleEntity = await this.rolesService.getRoleByName(
+      getRoleByNameDto,
+    );
+
+    if (!role) {
+      throw new NotFoundException('Role not found: ', JSON.stringify(role));
+    }
+
+    return role;
   }
 }

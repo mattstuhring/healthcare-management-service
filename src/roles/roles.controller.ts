@@ -67,7 +67,7 @@ export class RolesController {
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
-  getRole(@Param('id') getRoleDto: GetRoleDto): Promise<RoleEntity> {
+  getRole(@Param() getRoleDto: GetRoleDto): Promise<RoleEntity> {
     return this.rolesService.getRole(getRoleDto);
   }
 
@@ -93,7 +93,7 @@ export class RolesController {
   @ApiForbiddenResponse({ description: 'Unauthorized Request' })
   @Roles(RoleName.ADMIN)
   updateRole(
-    @Param('id') getRoleDto: GetRoleDto,
+    @Param() getRoleDto: GetRoleDto,
     @Body() updateRoleDto: UpdateRoleDto,
   ): Promise<RoleEntity> {
     return this.rolesService.updateRole(getRoleDto, updateRoleDto);
@@ -110,7 +110,7 @@ export class RolesController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
-  deleteRole(@Param('id') deleteRoleDto: DeleteRoleDto): Promise<void> {
+  deleteRole(@Param() deleteRoleDto: DeleteRoleDto): Promise<void> {
     return this.rolesService.deleteRole(deleteRoleDto);
   }
 }

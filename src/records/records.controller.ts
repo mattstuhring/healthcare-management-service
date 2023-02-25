@@ -72,7 +72,7 @@ export class RecordsController {
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  getRecord(@Param('id') getRecordDto: GetRecordDto): Promise<RecordEntity> {
+  getRecord(@Param() getRecordDto: GetRecordDto): Promise<RecordEntity> {
     return this.recordsService.getRecord(getRecordDto);
   }
 
@@ -99,7 +99,7 @@ export class RecordsController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   updateRecordHealthStatus(
-    @Param('id') getRecordDto: GetRecordDto,
+    @Param() getRecordDto: GetRecordDto,
     @Body() updateRecordHealthDto: UpdateRecordHealthDto,
   ): Promise<RecordEntity> {
     return this.recordsService.updateRecordHealthStatus(
@@ -117,7 +117,7 @@ export class RecordsController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   updateRecord(
-    @Param('id') getRecordDto: GetRecordDto,
+    @Param() getRecordDto: GetRecordDto,
     @Body() updateRecordDto: UpdateRecordDto,
   ): Promise<RecordEntity> {
     return this.recordsService.updateRecord(getRecordDto, updateRecordDto);
@@ -134,7 +134,7 @@ export class RecordsController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
-  deleteRecord(@Param('id') deleteRecordDto: DeleteRecordDto): Promise<void> {
+  deleteRecord(@Param() deleteRecordDto: DeleteRecordDto): Promise<void> {
     return this.recordsService.deleteRecord(deleteRecordDto);
   }
 }

@@ -19,7 +19,6 @@ import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
@@ -27,7 +26,6 @@ import {
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -68,7 +66,7 @@ export class UsersController {
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  getUser(@Param('id') getUserDto: GetUserDto): Promise<UserEntity> {
+  getUser(@Param() getUserDto: GetUserDto): Promise<UserEntity> {
     return this.usersService.getUser(getUserDto);
   }
 
@@ -95,7 +93,7 @@ export class UsersController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   updateUser(
-    @Param('id') getUserDto: GetUserDto,
+    @Param() getUserDto: GetUserDto,
     @Body() updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
     return this.usersService.updateUser(getUserDto, updateUserDto);
@@ -112,7 +110,7 @@ export class UsersController {
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
-  deleteUser(@Param('id') deleteUserDto: DeleteUserDto): Promise<void> {
+  deleteUser(@Param() deleteUserDto: DeleteUserDto): Promise<void> {
     return this.usersService.deleteUser(deleteUserDto);
   }
 }

@@ -46,7 +46,7 @@ export class RolesGuard implements CanActivate {
   authorizer(token: string, roles: string[]): boolean {
     const user = this.jwtService.decode(token) as AuthAccessTokenPayload;
 
-    return roles.includes(user.role);
+    return roles.includes(user.role.name);
   }
 
   // Extract Bearer token from request headers
