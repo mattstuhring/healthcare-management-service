@@ -1,4 +1,4 @@
-import { recordsStub, janeDoePrimaryRecord } from './records.stub';
+import { recordsStub, recordStub } from './records.stub';
 
 /**
  * Mocks
@@ -13,10 +13,10 @@ import { recordsStub, janeDoePrimaryRecord } from './records.stub';
  * We can use mocks to verify that our code is calling the dependencies in an expected way.
  */
 export const recordsRepositoryMock = jest.fn(() => ({
-  findOneBy: jest.fn().mockResolvedValue(janeDoePrimaryRecord),
-  create: jest.fn().mockResolvedValue(janeDoePrimaryRecord),
-  save: jest.fn().mockResolvedValue(janeDoePrimaryRecord),
-  update: jest.fn().mockResolvedValue(janeDoePrimaryRecord),
+  findOneBy: jest.fn().mockResolvedValue(recordStub),
+  create: jest.fn().mockResolvedValue(recordStub),
+  save: jest.fn().mockResolvedValue(recordStub),
+  update: jest.fn().mockResolvedValue(recordStub),
   delete: jest.fn(),
   createQueryBuilder: jest.fn(() => ({
     andWhere: jest.fn().mockReturnThis(),
