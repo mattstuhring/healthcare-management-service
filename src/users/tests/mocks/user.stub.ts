@@ -36,17 +36,7 @@ export const userEmployeeStub: UserEntity = {
   role: roleEmployeeStub,
 };
 
-export const customerJaneDoeStub: UserEntity = {
-  id: '069baf49-2826-46c3-88f3-2b04c552597c',
-  username: 'janedoe@gmail.com',
-  password: '$2a$12$P27vsZFe7ET6kYV36bNz2eQoXxQ25sCMjD2.c/Q9er.biDifz3kI6', // password
-  createDate: new Date(),
-  updateDate: new Date(),
-  records: [],
-  role: roleCustomerStub,
-};
-
-export const customerJohnDoeStub: UserEntity = {
+export const userCustomerStub: UserEntity = {
   id: 'e382bfec-732a-44ec-a9d7-323039f07eda',
   username: 'johndoe@gmail.com',
   password: '$2a$12$P27vsZFe7ET6kYV36bNz2eQoXxQ25sCMjD2.c/Q9er.biDifz3kI6', // password

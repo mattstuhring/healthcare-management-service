@@ -10,16 +10,21 @@ import {
   recordsRepositoryMock,
 } from './mocks/records.mock';
 import {
+  createRecordDtoStub,
   getRecordsFilterDtoByStatusStub,
   getRecordsFilterDtoByTypeStub,
   getRecordsFilterDtoStub,
   recordsStub,
+  recordStub,
 } from './mocks/records.stub';
 import { GetRecordsFilterDto } from '../dtos/get-records-filter.dto';
+import { InternalServerErrorException } from '@nestjs/common';
+import { userCustomerStub } from '../../users/tests/mocks/user.stub';
 
 describe('RecordsService', () => {
   let recordsService: RecordsService;
   let recordsRepository: Repository<RecordEntity>;
+  let usersService: UsersService;
 
   const RECORD_REPOSITORY_TOKEN = getRepositoryToken(RecordEntity);
 
@@ -33,7 +38,9 @@ describe('RecordsService', () => {
         },
         {
           provide: UsersService,
-          useValue: jest.fn(),
+          useValue: {
+            getUser: jest.fn().mockResolvedValue(userCustomerStub),
+          },
         },
         {
           provide: RolesService,
@@ -46,29 +53,76 @@ describe('RecordsService', () => {
     recordsRepository = module.get<Repository<RecordEntity>>(
       RECORD_REPOSITORY_TOKEN,
     );
+    usersService = module.get<UsersService>(UsersService);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('RecordsService', () => {
-    it('should be defined', () => {
-      expect(recordsService).toBeDefined();
-      expect(recordsRepository).toBeDefined();
+  it('should be defined', () => {
+    expect(recordsService).toBeDefined();
+    expect(recordsRepository).toBeDefined();
+  });
+
+  describe('createRecord()', () => {
+    it('should return new record entity', async () => {
+      // Arrange
+      const spy = jest.spyOn(recordsService, 'createRecord');
+
+      // Act
+      const response = await recordsService.createRecord(createRecordDtoStub);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(createRecordDtoStub);
+      expect(response).toEqual(recordStub);
+    });
+
+    it('should call userService to retrieve userId', async () => {
+      // Act
+      await recordsService.createRecord(createRecordDtoStub);
+
+      // Assert
+      expect(usersService.getUser).toBeCalledTimes(1);
+    });
+
+    it('should create & save a new record', async () => {
+      // Act
+      await recordsService.createRecord(createRecordDtoStub);
+
+      // Assert
+      expect(recordsRepository.create).toBeCalledTimes(1);
+      expect(recordsRepository.save).toBeCalledTimes(1);
     });
   });
 
   describe('getRecords()', () => {
-    it('should return filtered by typeOfCare response', async () => {
-      // Arrange
+    beforeEach(() => {
       jest
         .spyOn(recordsRepository, 'createQueryBuilder')
         .mockImplementation(() => createQueryBuilderMock);
       jest
         .spyOn(createQueryBuilderMock, 'getMany')
         .mockImplementation(() => recordsStub);
+    });
 
+    it('should return record entity array', async () => {
+      // Arrange
+      const spy = jest.spyOn(recordsService, 'getRecords');
+
+      // Act
+      const response = await recordsService.getRecords(getRecordsFilterDtoStub);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(getRecordsFilterDtoStub);
+      expect(recordsRepository.createQueryBuilder).toBeCalledTimes(1);
+      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(2);
+      expect(createQueryBuilderMock.getMany).toBeCalledTimes(1);
+      expect(response).toEqual(recordsStub);
+    });
+
+    it('should return filtered by typeOfCare response', async () => {
+      // Arrange
       const spy = jest.spyOn(recordsService, 'getRecords');
 
       // Act
@@ -77,22 +131,13 @@ describe('RecordsService', () => {
       );
 
       // Assert
-      expect(recordsRepository.createQueryBuilder).toBeCalledTimes(1);
-      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(1);
-      expect(createQueryBuilderMock.getMany).toBeCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(getRecordsFilterDtoByTypeStub);
-      expect(response).toEqual(recordsStub);
+      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(1);
+      expect(response).toEqual(response);
     });
 
     it('should return filtered by healthStatus response', async () => {
       // Arrange
-      jest
-        .spyOn(recordsRepository, 'createQueryBuilder')
-        .mockImplementation(() => createQueryBuilderMock);
-      jest
-        .spyOn(createQueryBuilderMock, 'getMany')
-        .mockImplementation(() => recordsStub);
-
       const spy = jest.spyOn(recordsService, 'getRecords');
 
       // Act
@@ -101,41 +146,15 @@ describe('RecordsService', () => {
       );
 
       // Assert
-      expect(recordsRepository.createQueryBuilder).toBeCalledTimes(1);
-      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(1);
-      expect(createQueryBuilderMock.getMany).toBeCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(getRecordsFilterDtoByStatusStub);
-      expect(response).toEqual(recordsStub);
-    });
-
-    it('should return filtered by typeOfCare and healthStatus response', async () => {
-      // Arrange
-      jest
-        .spyOn(recordsRepository, 'createQueryBuilder')
-        .mockImplementation(() => createQueryBuilderMock);
-      jest
-        .spyOn(createQueryBuilderMock, 'getMany')
-        .mockImplementation(() => recordsStub);
-
-      const spy = jest.spyOn(recordsService, 'getRecords');
-
-      // Act
-      const response = await recordsService.getRecords(getRecordsFilterDtoStub);
-
-      // Assert
-      expect(recordsRepository.createQueryBuilder).toBeCalledTimes(1);
-      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(2);
-      expect(createQueryBuilderMock.getMany).toBeCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith(getRecordsFilterDtoStub);
-      expect(response).toEqual(recordsStub);
+      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(1);
+      expect(response).toEqual(response);
     });
 
     it('should return unfiltered response', async () => {
       // Arrange
       const result: RecordEntity[] = [];
-      jest
-        .spyOn(recordsRepository, 'createQueryBuilder')
-        .mockImplementation(() => createQueryBuilderMock);
+
       jest
         .spyOn(createQueryBuilderMock, 'getMany')
         .mockImplementation(() => result);
@@ -148,11 +167,21 @@ describe('RecordsService', () => {
       );
 
       // Assert
-      expect(recordsRepository.createQueryBuilder).toBeCalledTimes(1);
-      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(0);
-      expect(createQueryBuilderMock.getMany).toBeCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(new GetRecordsFilterDto());
+      expect(createQueryBuilderMock.andWhere).toBeCalledTimes(0);
       expect(response).toEqual(result);
+    });
+
+    it('should throw InternalServerError exception', async () => {
+      // Arrange
+      jest
+        .spyOn(createQueryBuilderMock, 'getMany')
+        .mockRejectedValue(new Error());
+
+      // Act & Assert
+      await expect(
+        recordsService.getRecords(new GetRecordsFilterDto()),
+      ).rejects.toThrowError(InternalServerErrorException);
     });
   });
 });

@@ -25,15 +25,15 @@ import { GetUserDto } from '../users/dtos/get-user.dto';
 @Injectable()
 export class RecordsService {
   private recordsRepository: Repository<RecordEntity>;
-  private userService: UsersService;
+  private usersService: UsersService;
   private logger = new Logger('RecordsService', { timestamp: true });
 
   constructor(
     @InjectRepository(RecordEntity) recordsRepository: Repository<RecordEntity>,
-    userService: UsersService,
+    usersService: UsersService,
   ) {
     this.recordsRepository = recordsRepository;
-    this.userService = userService;
+    this.usersService = usersService;
   }
 
   /**
@@ -44,9 +44,10 @@ export class RecordsService {
   async createRecord(createRecordDto: CreateRecordDto): Promise<RecordEntity> {
     const { name, dateOfBirth, typeOfCare, userId } = createRecordDto;
 
-    const getUserDto: GetUserDto = new GetUserDto();
-    getUserDto.id = userId;
-    const user: UserEntity = await this.userService.getUser(getUserDto);
+    const getUserDto: GetUserDto = {
+      id: userId,
+    };
+    const user: UserEntity = await this.usersService.getUser(getUserDto);
 
     const record = this.recordsRepository.create({
       name,

@@ -2,7 +2,8 @@ import { HealthStatus } from '../../constants/record-health-status.enum';
 import { RecordEntity } from '../../record.entity';
 import { GetRecordsFilterDto } from '../../dtos/get-records-filter.dto';
 import { Healthcare } from '../../constants/record-healthcare.enum';
-import { customerJohnDoeStub } from '../../../users/tests/mocks/user.stub';
+import { userCustomerStub } from '../../../users/tests/mocks/user.stub';
+import { CreateRecordDto } from 'src/records/dtos/create-record.dto';
 
 /**
  * Stubs
@@ -23,23 +24,30 @@ export const recordStub: RecordEntity = {
   healthStatus: HealthStatus.EXCELLENT,
   createdAt: new Date(),
   updatedAt: new Date(),
-  user: customerJohnDoeStub,
+  user: userCustomerStub,
 };
 
 export const recordsStub: RecordEntity[] = [recordStub];
 
-// Filter records by typeOfCare and healthStatus
+export const createRecordDtoStub: CreateRecordDto = {
+  name: 'name',
+  dateOfBirth: 'dob',
+  typeOfCare: Healthcare.MENTAL_HEALTHCARE,
+  userId: userCustomerStub.id,
+};
+
+// Get records - Filter by typeOfCare and healthStatus
 export const getRecordsFilterDtoStub: GetRecordsFilterDto = {
   typeOfCare: Healthcare.PRIMARY_HEALTHCARE,
   search: HealthStatus.EXCELLENT,
 };
 
-// Filter records by typeOfCare
+// Get records - Filter by typeOfCare
 export const getRecordsFilterDtoByTypeStub: GetRecordsFilterDto = {
   typeOfCare: Healthcare.PRIMARY_HEALTHCARE,
 };
 
-// Filter records by healthStatus
+// Get records - Filter by healthStatus
 export const getRecordsFilterDtoByStatusStub: GetRecordsFilterDto = {
   search: 'EXCELLENT',
 };
