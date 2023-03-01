@@ -18,8 +18,6 @@ import { CreateRecordDto } from 'src/records/dtos/create-record.dto';
  */
 export const recordStub: RecordEntity = {
   id: '4a8993e0-7acd-4d25-827e-7888318d2744',
-  name: 'John Doe',
-  dateOfBirth: '11/11/1111',
   typeOfCare: Healthcare.PRIMARY_HEALTHCARE,
   healthStatus: HealthStatus.EXCELLENT,
   createdAt: new Date(),
@@ -30,8 +28,6 @@ export const recordStub: RecordEntity = {
 export const recordsStub: RecordEntity[] = [recordStub];
 
 export const createRecordDtoStub: CreateRecordDto = {
-  name: 'name',
-  dateOfBirth: 'dob',
   typeOfCare: Healthcare.MENTAL_HEALTHCARE,
   userId: userCustomerStub.id,
 };

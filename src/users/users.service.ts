@@ -13,7 +13,7 @@ import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
 import { RolesService } from '../roles/roles.service';
 import { GetRoleByNameDto } from '../roles/dtos/get-role-by-name.dto';
-import { GetUserByNameDto } from './dtos/get-user-by-name.dto';
+import { GetUserByUsernameDto } from './dtos/get-user-by-username.dto';
 import { GetUserDto } from './dtos/get-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
@@ -42,7 +42,7 @@ export class UsersService {
    * @returns the user
    */
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { username, password, roleName } = createUserDto;
+    const { username, password, name, dateOfBirth, roleName } = createUserDto;
 
     try {
       // Encrypt user password
@@ -55,6 +55,8 @@ export class UsersService {
       const user = this.usersRepository.create({
         username,
         password: hashedPassword,
+        name,
+        dateOfBirth,
         role,
       });
 
@@ -92,11 +94,13 @@ export class UsersService {
 
   /**
    * Get User by Name
-   * @param getUserByNameDto
+   * @param getUserByusernameDto
    * @returns the user
    */
-  async getUserByName(getUserByNameDto: GetUserByNameDto): Promise<UserEntity> {
-    const { username } = getUserByNameDto;
+  async getUserByUsername(
+    getUserByusernameDto: GetUserByUsernameDto,
+  ): Promise<UserEntity> {
+    const { username } = getUserByusernameDto;
 
     const user = await this.usersRepository.findOneBy({ username });
 
@@ -117,7 +121,7 @@ export class UsersService {
     getUserDto: GetUserDto,
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
-    const { username, roleName } = updateUserDto;
+    const { username, name, dateOfBirth, roleName } = updateUserDto;
 
     // Empty request body
     if (!username && !roleName) {
@@ -130,6 +134,16 @@ export class UsersService {
     // Update username
     if (username) {
       user.username = username;
+    }
+
+    // Update name
+    if (name) {
+      user.name = name;
+    }
+
+    // Update dateOfBirth
+    if (dateOfBirth) {
+      user.dateOfBirth = dateOfBirth;
     }
 
     // Update user role

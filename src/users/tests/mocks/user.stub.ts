@@ -18,7 +18,9 @@ import { UserEntity } from '../../user.entity';
  */
 export const userAdminStub: UserEntity = {
   id: '3a3a5b16-0403-4145-8c2d-bda86c7d43af',
-  username: 'admin@gmail.com',
+  name: 'Test Admin',
+  dateOfBirth: '11/11/1111',
+  username: 'admin@email.com',
   password: '$2a$12$P27vsZFe7ET6kYV36bNz2eQoXxQ25sCMjD2.c/Q9er.biDifz3kI6', // password
   createDate: new Date(),
   updateDate: new Date(),
@@ -28,7 +30,9 @@ export const userAdminStub: UserEntity = {
 
 export const userEmployeeStub: UserEntity = {
   id: '57ab052d-9363-40ba-9696-f00fab889f57',
-  username: 'employee@gmail.com',
+  name: 'Test Employee',
+  dateOfBirth: '22/22/2222',
+  username: 'employee@email.com',
   password: '$2a$12$P27vsZFe7ET6kYV36bNz2eQoXxQ25sCMjD2.c/Q9er.biDifz3kI6', // password
   createDate: new Date(),
   updateDate: new Date(),
@@ -38,7 +42,9 @@ export const userEmployeeStub: UserEntity = {
 
 export const userCustomerStub: UserEntity = {
   id: 'e382bfec-732a-44ec-a9d7-323039f07eda',
-  username: 'johndoe@gmail.com',
+  name: 'John Doe',
+  dateOfBirth: '33/33/3333',
+  username: 'johndoe@email.com',
   password: '$2a$12$P27vsZFe7ET6kYV36bNz2eQoXxQ25sCMjD2.c/Q9er.biDifz3kI6', // password
   createDate: new Date(),
   updateDate: new Date(),

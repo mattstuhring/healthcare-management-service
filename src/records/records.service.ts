@@ -42,7 +42,7 @@ export class RecordsService {
    * @returns the record
    */
   async createRecord(createRecordDto: CreateRecordDto): Promise<RecordEntity> {
-    const { name, dateOfBirth, typeOfCare, userId } = createRecordDto;
+    const { typeOfCare, userId } = createRecordDto;
 
     const getUserDto: GetUserDto = {
       id: userId,
@@ -50,8 +50,6 @@ export class RecordsService {
     const user: UserEntity = await this.usersService.getUser(getUserDto);
 
     const record = this.recordsRepository.create({
-      name,
-      dateOfBirth,
       typeOfCare,
       healthStatus: HealthStatus.UNKNOWN,
       updatedAt: new Date(),
@@ -147,25 +145,15 @@ export class RecordsService {
     getRecordDto: GetRecordDto,
     updateRecordDto: UpdateRecordDto,
   ): Promise<RecordEntity> {
-    const { name, dateOfBirth, typeOfCare, healthStatus } = updateRecordDto;
+    const { typeOfCare, healthStatus } = updateRecordDto;
 
     // Empty request body
-    if (!name && !dateOfBirth && !typeOfCare && !healthStatus) {
+    if (!typeOfCare && !healthStatus) {
       throw new BadRequestException();
     }
 
     // Retrieve record
     const record = await this.getRecord(getRecordDto);
-
-    // Update name
-    if (name) {
-      record.name = name;
-    }
-
-    // Update date of birth
-    if (dateOfBirth) {
-      record.dateOfBirth = dateOfBirth;
-    }
 
     // Update type of care
     if (typeOfCare) {

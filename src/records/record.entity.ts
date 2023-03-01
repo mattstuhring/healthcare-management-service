@@ -16,12 +16,6 @@ export class RecordEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  name: string;
-
-  @Column({ name: 'date_of_birth' })
-  dateOfBirth: string;
-
   @Column({ name: 'type_of_care' })
   typeOfCare: Healthcare;
 

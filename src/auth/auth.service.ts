@@ -4,7 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { AuthAccessTokenPayload } from './models/auth-access-token-payload.interface';
 import { UsersService } from '../users/users.service';
-import { GetUserByNameDto } from '../users/dtos/get-user-by-name.dto';
+import { GetUserByUsernameDto } from '../users/dtos/get-user-by-username.dto';
 import { UserEntity } from '../users/user.entity';
 import { AuthJwtResponse } from './models/auth-jwt-response.interface';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
@@ -56,13 +56,14 @@ export class AuthService {
   async login(authLoginUserDto: AuthLoginUserDto): Promise<AuthJwtResponse> {
     const { username, password } = authLoginUserDto;
 
-    const getUserByNameDto: GetUserByNameDto = new GetUserByNameDto();
-    getUserByNameDto.username = username;
+    const getUserByUsernameDto: GetUserByUsernameDto = {
+      username,
+    };
 
     try {
       // Verify user exists
-      const user: UserEntity = await this.usersService.getUserByName(
-        getUserByNameDto,
+      const user: UserEntity = await this.usersService.getUserByUsername(
+        getUserByUsernameDto,
       );
       if (!user) {
         throw new Error();
@@ -118,10 +119,11 @@ export class AuthService {
       ) as AuthRefreshTokenPayload;
 
       // Retrieve user entity
-      const getUserByNameDto: GetUserByNameDto = new GetUserByNameDto();
-      getUserByNameDto.username = decodedToken.username;
-      const user: UserEntity = await this.usersService.getUserByName(
-        getUserByNameDto,
+      const getUserByUsernameDto: GetUserByUsernameDto = {
+        username: decodedToken.username,
+      };
+      const user: UserEntity = await this.usersService.getUserByUsername(
+        getUserByUsernameDto,
       );
 
       // Create JWT token w/ AccessToken & RefreshToken

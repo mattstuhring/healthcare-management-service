@@ -22,7 +22,7 @@ import { UpdateRoleDto } from './roles/dtos/update-role.dto';
 import { TransformInterceptor } from './transform.interceptor';
 import { CreateUserDto } from './users/dtos/create-user.dto';
 import { DeleteUserDto } from './users/dtos/delete-user.dto';
-import { GetUserByNameDto } from './users/dtos/get-user-by-name.dto';
+import { GetUserByUsernameDto } from './users/dtos/get-user-by-username.dto';
 import { GetUserDto } from './users/dtos/get-user.dto';
 import { UpdateUserDto } from './users/dtos/update-user.dto';
 
@@ -38,7 +38,7 @@ async function bootstrap() {
     extraModels: [
       CreateUserDto,
       GetUserDto,
-      GetUserByNameDto,
+      GetUserByUsernameDto,
       UpdateUserDto,
       DeleteUserDto,
       CreateRoleDto,

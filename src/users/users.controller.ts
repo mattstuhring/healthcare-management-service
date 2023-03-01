@@ -12,7 +12,7 @@ import {
 import { RolesGuard } from '../roles/roles.guard';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { GetUserByNameDto } from './dtos/get-user-by-name.dto';
+import { GetUserByUsernameDto } from './dtos/get-user-by-username.dto';
 import { UserEntity } from './user.entity';
 import { UsersService } from './users.service';
 import { Roles } from '../roles/decorators/roles.decorator';
@@ -78,10 +78,10 @@ export class UsersController {
   @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  getUserByName(
-    @Param('username') getUserByNameDto: GetUserByNameDto,
+  getUserByUsername(
+    @Param('username') getUserByUsernameDto: GetUserByUsernameDto,
   ): Promise<UserEntity> {
-    return this.usersService.getUserByName(getUserByNameDto);
+    return this.usersService.getUserByUsername(getUserByUsernameDto);
   }
 
   @Patch(':id')

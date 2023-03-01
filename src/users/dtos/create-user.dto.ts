@@ -39,6 +39,22 @@ export class CreateUserDto {
   })
   password: string;
 
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @ApiProperty({
+    type: String,
+    description: 'This is a required property',
+  })
+  @IsNotEmpty()
+  @IsString()
+  dateOfBirth: string;
+
   @ApiPropertyOptional({
     enum: RoleName,
     description: 'This is an optional property',

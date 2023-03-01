@@ -24,6 +24,12 @@ export class UserEntity {
   @Exclude()
   password: string;
 
+  @Column()
+  name: string;
+
+  @Column({ name: 'date_of_birth' })
+  dateOfBirth: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createDate: Date;
 

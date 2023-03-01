@@ -4,22 +4,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRecordDto {
   @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-
-  @ApiProperty({
-    type: String,
-    description: 'This is a required property',
-  })
-  @IsString()
-  @IsNotEmpty()
-  dateOfBirth: string;
-
-  @ApiProperty({
     enum: Healthcare,
     description: 'This is a required property',
   })
