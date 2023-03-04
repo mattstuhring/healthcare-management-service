@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { RecordEntity } from '../record.entity';
 import { RecordsService } from '../records.service';
 import { UsersService } from '../../users/users.service';
@@ -11,15 +11,25 @@ import {
 } from './mocks/records.mock';
 import {
   createRecordDtoStub,
+  deleteRecordDtoStub,
+  deleteResult,
+  getRecordDtoStub,
   getRecordsFilterDtoByStatusStub,
   getRecordsFilterDtoByTypeStub,
   getRecordsFilterDtoStub,
   recordsStub,
   recordStub,
+  updateRecordDtoStub,
 } from './mocks/records.stub';
 import { GetRecordsFilterDto } from '../dtos/get-records-filter.dto';
-import { InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { userCustomerStub } from '../../users/tests/mocks/user.stub';
+import { GetRecordDto } from '../dtos/get-record.dto';
+import { UpdateRecordDto } from '../dtos/update-record.dto';
 
 describe('RecordsService', () => {
   let recordsService: RecordsService;
@@ -65,6 +75,9 @@ describe('RecordsService', () => {
     expect(recordsRepository).toBeDefined();
   });
 
+  /**
+   * Create Record
+   */
   describe('createRecord()', () => {
     it('should return new record entity', async () => {
       // Arrange
@@ -96,6 +109,49 @@ describe('RecordsService', () => {
     });
   });
 
+  /**
+   * Get Record
+   */
+  describe('getRecord()', () => {
+    it('should return a record entity', async () => {
+      // Arrange
+      const spy = jest.spyOn(recordsService, 'getRecord');
+
+      // Act
+      const response = await recordsService.getRecord(getRecordDtoStub);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(getRecordDtoStub);
+      expect(response).toEqual(recordStub);
+    });
+
+    it('should call findOne one time', async () => {
+      // Arrange
+      const spy = jest.spyOn(recordsService, 'getRecord');
+
+      // Act
+      const response = await recordsService.getRecord(getRecordDtoStub);
+
+      // Assert
+      expect(spy).toHaveBeenCalledWith(getRecordDtoStub);
+      expect(recordsRepository.findOne).toBeCalledTimes(1);
+      expect(response).toEqual(recordStub);
+    });
+
+    it('should throw NotFoundException', async () => {
+      // Arrange
+      jest.spyOn(recordsRepository, 'findOne').mockResolvedValue(null);
+
+      // Act & Assert
+      await expect(
+        recordsService.getRecord(new GetRecordDto()),
+      ).rejects.toThrowError(NotFoundException);
+    });
+  });
+
+  /**
+   * Get Records
+   */
   describe('getRecords()', () => {
     beforeEach(() => {
       jest
@@ -106,7 +162,7 @@ describe('RecordsService', () => {
         .mockImplementation(() => recordsStub);
     });
 
-    it('should return record entity array', async () => {
+    it('should return array of records', async () => {
       // Arrange
       const spy = jest.spyOn(recordsService, 'getRecords');
 
@@ -182,6 +238,100 @@ describe('RecordsService', () => {
       await expect(
         recordsService.getRecords(new GetRecordsFilterDto()),
       ).rejects.toThrowError(InternalServerErrorException);
+    });
+  });
+
+  /**
+   * Update Record
+   */
+  describe('updateRecord()', () => {
+    it('should return record', async () => {
+      // Arrange
+      const spy = jest.spyOn(recordsService, 'updateRecord');
+
+      // Act
+      const response = await recordsService.updateRecord(
+        getRecordDtoStub,
+        updateRecordDtoStub,
+      );
+
+      // Assert
+      expect(spy).toBeCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(getRecordDtoStub, updateRecordDtoStub);
+      expect(response).toEqual(recordStub);
+    });
+
+    it('should retreive record', async () => {
+      // Arrange
+      jest.spyOn(recordsService, 'getRecord');
+
+      // Act
+      await recordsService.updateRecord(getRecordDtoStub, updateRecordDtoStub);
+
+      // Assert
+      expect(recordsService.getRecord).toBeCalledTimes(1);
+      expect(recordsService.getRecord).toBeCalledWith(getRecordDtoStub);
+    });
+
+    it('should update record type of care', async () => {
+      // Arrange
+      const updatedRecord: RecordEntity = recordStub;
+      updatedRecord.typeOfCare = updateRecordDtoStub.typeOfCare;
+
+      // Act
+      await recordsService.updateRecord(getRecordDtoStub, updateRecordDtoStub);
+
+      // Assert
+      expect(recordsRepository.save).toBeCalledTimes(1);
+      expect(recordsRepository.save).toBeCalledWith(updatedRecord);
+    });
+
+    it('should update record health status', async () => {
+      // Arrange
+      const updatedRecord: RecordEntity = recordStub;
+      updatedRecord.healthStatus = updateRecordDtoStub.healthStatus;
+
+      // Act
+      await recordsService.updateRecord(getRecordDtoStub, updateRecordDtoStub);
+
+      // Assert
+      expect(recordsRepository.save).toBeCalledTimes(1);
+      expect(recordsRepository.save).toBeCalledWith(updatedRecord);
+    });
+
+    it('should throw BadRequestException', async () => {
+      // Act & Assert
+      await expect(
+        recordsService.updateRecord(new GetRecordDto(), new UpdateRecordDto()),
+      ).rejects.toThrowError(BadRequestException);
+    });
+  });
+
+  describe('deleteRecord()', () => {
+    it('should delete record', async () => {
+      // Arrange
+      const spy = jest.spyOn(recordsService, 'deleteRecord');
+
+      // Act
+      const response = await recordsService.deleteRecord(deleteRecordDtoStub);
+
+      // Assert
+      expect(spy).toBeCalledTimes(1);
+      expect(spy).toHaveBeenCalledWith(deleteRecordDtoStub);
+      expect(response).toBeNull;
+    });
+
+    it('should throw NotFoundException', async () => {
+      // Arrange
+      const result: DeleteResult = deleteResult;
+      result.affected = 0;
+
+      jest.spyOn(recordsRepository, 'delete').mockResolvedValue(result);
+
+      // Act & Assert
+      await expect(
+        recordsService.deleteRecord(deleteRecordDtoStub),
+      ).rejects.toThrowError(NotFoundException);
     });
   });
 });

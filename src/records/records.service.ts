@@ -12,7 +12,6 @@ import { CreateRecordDto } from './dtos/create-record.dto';
 import { GetRecordDto } from './dtos/get-record.dto';
 import { DeleteRecordDto } from './dtos/delete-record.dto';
 import { UpdateRecordDto } from './dtos/update-record.dto';
-import { UpdateRecordHealthDto } from './dtos/update-record-health.dto';
 import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
 import { RecordEntity } from './record.entity';
 import { UserEntity } from '../users/user.entity';
@@ -118,24 +117,6 @@ export class RecordsService {
   }
 
   /**
-   * Update record with new health status
-   * @param getRecordDto
-   * @param updateRecordHealthDto
-   * @returns the record
-   */
-  async updateRecordHealthStatus(
-    getRecordDto: GetRecordDto,
-    updateRecordHealthDto: UpdateRecordHealthDto,
-  ): Promise<RecordEntity> {
-    const { healthStatus } = updateRecordHealthDto;
-
-    const record = await this.getRecord(getRecordDto);
-    record.healthStatus = healthStatus;
-
-    return await this.recordsRepository.save(record);
-  }
-
-  /**
    * Update record
    * @param getRecordDto
    * @param updateRecordHealthDto
@@ -176,8 +157,9 @@ export class RecordsService {
   async deleteRecord(deleteRecordDto: DeleteRecordDto): Promise<void> {
     const { id } = deleteRecordDto;
     const result = await this.recordsRepository.delete(id);
+    console.log(result);
 
-    if (result.affected === 0) {
+    if (!result || result.affected === 0) {
       throw new NotFoundException(`Record with ID: ${id} not found`);
     }
 

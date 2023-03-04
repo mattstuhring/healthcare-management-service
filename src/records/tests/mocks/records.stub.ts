@@ -3,7 +3,11 @@ import { RecordEntity } from '../../record.entity';
 import { GetRecordsFilterDto } from '../../dtos/get-records-filter.dto';
 import { Healthcare } from '../../constants/record-healthcare.enum';
 import { userCustomerStub } from '../../../users/tests/mocks/user.stub';
-import { CreateRecordDto } from 'src/records/dtos/create-record.dto';
+import { CreateRecordDto } from '../../dtos/create-record.dto';
+import { GetRecordDto } from '../../dtos/get-record.dto';
+import { UpdateRecordDto } from '../../dtos/update-record.dto';
+import { DeleteRecordDto } from 'src/records/dtos/delete-record.dto';
+import { DeleteResult } from 'typeorm';
 
 /**
  * Stubs
@@ -32,6 +36,10 @@ export const createRecordDtoStub: CreateRecordDto = {
   userId: userCustomerStub.id,
 };
 
+export const getRecordDtoStub: GetRecordDto = {
+  id: 'ceb3415d-953e-4be5-b634-857b31bcda60',
+};
+
 // Get records - Filter by typeOfCare and healthStatus
 export const getRecordsFilterDtoStub: GetRecordsFilterDto = {
   typeOfCare: Healthcare.PRIMARY_HEALTHCARE,
@@ -47,3 +55,14 @@ export const getRecordsFilterDtoByTypeStub: GetRecordsFilterDto = {
 export const getRecordsFilterDtoByStatusStub: GetRecordsFilterDto = {
   search: 'EXCELLENT',
 };
+
+export const updateRecordDtoStub: UpdateRecordDto = {
+  healthStatus: HealthStatus.GOOD,
+  typeOfCare: Healthcare.SPECIALTY_HEALTHCARE,
+};
+
+export const deleteRecordDtoStub: DeleteRecordDto = {
+  id: '6498b1ff-ef2b-4165-ba69-7a9716622a68',
+};
+
+export const deleteResult: DeleteResult = { raw: [], affected: 1 };

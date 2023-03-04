@@ -12,7 +12,6 @@ import { CreateRecordDto } from './records/dtos/create-record.dto';
 import { DeleteRecordDto } from './records/dtos/delete-record.dto';
 import { GetRecordDto } from './records/dtos/get-record.dto';
 import { GetRecordsFilterDto } from './records/dtos/get-records-filter.dto';
-import { UpdateRecordHealthDto } from './records/dtos/update-record-health.dto';
 import { UpdateRecordDto } from './records/dtos/update-record.dto';
 import { CreateRoleDto } from './roles/dtos/create-role.dto';
 import { DeleteRoleDto } from './roles/dtos/delete-role.dto';
@@ -50,7 +49,6 @@ async function bootstrap() {
       DeleteRecordDto,
       GetRecordDto,
       GetRecordsFilterDto,
-      UpdateRecordHealthDto,
       UpdateRecordDto,
       AuthLoginUserDto,
       AuthRefreshTokenDto,

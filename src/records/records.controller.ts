@@ -17,7 +17,6 @@ import { CreateRecordDto } from './dtos/create-record.dto';
 import { GetRecordDto } from './dtos/get-record.dto';
 import { DeleteRecordDto } from './dtos/delete-record.dto';
 import { UpdateRecordDto } from './dtos/update-record.dto';
-import { UpdateRecordHealthDto } from './dtos/update-record-health.dto';
 import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
 import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
@@ -88,24 +87,6 @@ export class RecordsController {
     @Query() getRecordsFilterDto: GetRecordsFilterDto,
   ): Promise<RecordEntity[]> {
     return this.recordsService.getRecords(getRecordsFilterDto);
-  }
-
-  @Patch(':id/health-status')
-  @ApiOkResponse({ description: 'The resource was updated successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
-  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
-  updateRecordHealthStatus(
-    @Param() getRecordDto: GetRecordDto,
-    @Body() updateRecordHealthDto: UpdateRecordHealthDto,
-  ): Promise<RecordEntity> {
-    return this.recordsService.updateRecordHealthStatus(
-      getRecordDto,
-      updateRecordHealthDto,
-    );
   }
 
   @Patch(':id')
