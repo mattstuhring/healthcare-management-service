@@ -109,7 +109,6 @@ export class RecordsService {
         `Failed to get records. Filters: ${JSON.stringify(
           getRecordsFilterDto,
         )}`,
-        error.stack,
       );
 
       throw new InternalServerErrorException();
@@ -157,7 +156,6 @@ export class RecordsService {
   async deleteRecord(deleteRecordDto: DeleteRecordDto): Promise<void> {
     const { id } = deleteRecordDto;
     const result = await this.recordsRepository.delete(id);
-    console.log(result);
 
     if (!result || result.affected === 0) {
       throw new NotFoundException(`Record with ID: ${id} not found`);

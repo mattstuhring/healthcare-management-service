@@ -2,7 +2,7 @@ import { HealthStatus } from '../../constants/record-health-status.enum';
 import { RecordEntity } from '../../record.entity';
 import { GetRecordsFilterDto } from '../../dtos/get-records-filter.dto';
 import { Healthcare } from '../../constants/record-healthcare.enum';
-import { userCustomerStub } from '../../../users/tests/mocks/user.stub';
+import { userCustomerStub } from '../../../users/tests/mocks/users.stub';
 import { CreateRecordDto } from '../../dtos/create-record.dto';
 import { GetRecordDto } from '../../dtos/get-record.dto';
 import { UpdateRecordDto } from '../../dtos/update-record.dto';

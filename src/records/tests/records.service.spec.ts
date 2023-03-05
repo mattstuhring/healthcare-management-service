@@ -27,7 +27,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { userCustomerStub } from '../../users/tests/mocks/user.stub';
+import { userCustomerStub } from '../../users/tests/mocks/users.stub';
 import { GetRecordDto } from '../dtos/get-record.dto';
 import { UpdateRecordDto } from '../dtos/update-record.dto';
 

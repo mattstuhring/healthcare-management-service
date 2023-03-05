@@ -62,11 +62,10 @@ export class UsersService {
 
       return await this.usersRepository.save(user);
     } catch (err) {
-      // Postgres 23505 duplicate username error code
       if (err.code === '23505') {
+        // Postgres error code 23505 = duplicate username
         throw new ConflictException('Username already exists');
       } else if (err instanceof NotFoundException) {
-        console.log('Role not found: ', err.name, err.message);
         throw new NotFoundException(err.name, err.message);
       } else {
         console.log(err);
@@ -164,7 +163,7 @@ export class UsersService {
 
     const result = await this.usersRepository.delete(id);
 
-    if (result.affected === 0) {
+    if (!result || result.affected === 0) {
       throw new NotFoundException(`User with ID: ${id} not found`);
     }
 
@@ -179,8 +178,9 @@ export class UsersService {
 
   // Retrieve RBAC role by name
   private async getRoleByName(roleName: RoleName): Promise<RoleEntity> {
-    const getRoleByNameDto = new GetRoleByNameDto();
-    getRoleByNameDto.name = roleName;
+    const getRoleByNameDto: GetRoleByNameDto = {
+      name: roleName,
+    };
 
     const role: RoleEntity = await this.rolesService.getRoleByName(
       getRoleByNameDto,
