@@ -18,7 +18,11 @@ import {
   roleAdminStub,
   roleCustomerStub,
 } from '../../roles/tests/mocks/roles.stub';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { GetRecordDto } from '../../records/dtos/get-record.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 
@@ -146,13 +150,13 @@ describe('UsersService', () => {
       const repoSaveSpy = jest
         .spyOn(usersRepository, 'save')
         .mockImplementation(() => {
-          throw new Error();
+          throw new InternalServerErrorException();
         });
 
       try {
         await usersService.createUser(createUserDtoStub);
       } catch (error) {
-        expect(repoSaveSpy).toThrow(Error);
+        expect(repoSaveSpy).toThrow(InternalServerErrorException);
       }
     });
   });

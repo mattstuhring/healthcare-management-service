@@ -1,5 +1,11 @@
+import { CreateRoleDto } from '../../dtos/create-role.dto';
+import { GetRoleDto } from '../../dtos/get-role.dto';
+import { DeleteResult } from 'typeorm';
 import { RoleName } from '../../constants/role-name.enum';
 import { RoleEntity } from '../../role.entity';
+import { GetRoleByNameDto } from '../../dtos/get-role-by-name.dto';
+import { UpdateRoleDto } from '../../dtos/update-role.dto';
+import { DeleteRoleDto } from '../../dtos/delete-role.dto';
 
 /**
  * Stubs
@@ -46,4 +52,34 @@ export const roleCustomerStub: RoleEntity = {
   createdAt: new Date(),
   updatedAt: new Date(),
   users: [],
+};
+
+export const deleteResult: DeleteResult = { raw: [], affected: 1 };
+
+export const createRoleDtoStub: CreateRoleDto = {
+  name: RoleName.ADMIN,
+  create: true,
+  read: true,
+  update: true,
+  del: true,
+};
+
+export const getRoleDtoStub: GetRoleDto = {
+  id: '0fe9bd6e-bac6-4ff1-8f45-be917abe2557',
+};
+
+export const getRoleByNameDtoStub: GetRoleByNameDto = {
+  name: RoleName.ADMIN,
+};
+
+export const updateRoleDtoStub: UpdateRoleDto = {
+  name: RoleName.CUSTOMER,
+  create: true,
+  read: true,
+  update: false,
+  del: false,
+};
+
+export const deleteRoleDtoStub: DeleteRoleDto = {
+  id: '2f78d205-a0f6-45ac-a52f-94f0f0617340',
 };

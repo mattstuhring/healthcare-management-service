@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Logger,
   BadRequestException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -50,8 +51,8 @@ export class RolesService {
 
       return role;
     } catch (error) {
-      // Postgres duplicate username error code
       if (error.code === '23505') {
+        // Postgres duplicate role error code
         throw new ConflictException('Role already exists');
       } else {
         throw new InternalServerErrorException();
@@ -67,25 +68,17 @@ export class RolesService {
   async getRole(getRoleDto: GetRoleDto): Promise<RoleEntity> {
     const { id } = getRoleDto;
 
-    try {
-      const role: RoleEntity = await this.rolesRepository.findOne({
-        where: {
-          id,
-        },
-      });
+    const role: RoleEntity = await this.rolesRepository.findOne({
+      where: {
+        id,
+      },
+    });
 
-      if (!role) {
-        throw new NotFoundException(`Role with ID: ${id} not found`);
-      }
-
-      return role;
-    } catch (err) {
-      this.logger.error(
-        `Failed to get role: ${JSON.stringify(getRoleDto)}`,
-        err.stack,
-      );
-      throw new NotFoundException(err.name, err.message);
+    if (!role) {
+      throw new NotFoundException(`Role with ID: ${id} not found`);
     }
+
+    return role;
   }
 
   /**
@@ -96,25 +89,17 @@ export class RolesService {
   async getRoleByName(getRoleByNameDto: GetRoleByNameDto): Promise<RoleEntity> {
     const { name } = getRoleByNameDto;
 
-    try {
-      const role: RoleEntity = await this.rolesRepository.findOne({
-        where: {
-          name,
-        },
-      });
+    const role: RoleEntity = await this.rolesRepository.findOne({
+      where: {
+        name,
+      },
+    });
 
-      if (!role) {
-        throw new NotFoundException(`Role: ${name}, not found`);
-      }
-
-      return role;
-    } catch (err) {
-      this.logger.error(
-        `Failed to get role: ${JSON.stringify(getRoleByNameDto)}`,
-        err.stack,
-      );
-      throw new NotFoundException(err.name, err.message);
+    if (!role) {
+      throw new NotFoundException(`Role: ${name}, not found`);
     }
+
+    return role;
   }
 
   /**
@@ -127,42 +112,17 @@ export class RolesService {
     getRoleDto: GetRoleDto,
     updateRoleDto: UpdateRoleDto,
   ): Promise<RoleEntity> {
-    const { name, create, read, update, del } = updateRoleDto;
+    try {
+      await this.rolesRepository.update({ id: getRoleDto.id }, updateRoleDto);
 
-    // Empty request body
-    if (!name && !create && !read && !update && !del) {
-      throw new BadRequestException();
+      return await this.getRole(getRoleDto);
+    } catch (err) {
+      if (err instanceof NotFoundException) {
+        throw new NotFoundException();
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
-
-    // Retrieve role
-    const role: RoleEntity = await this.getRole(getRoleDto);
-
-    // Update name
-    if (name) {
-      role.name = name;
-    }
-
-    // Update create
-    if (create) {
-      role.create = create;
-    }
-
-    // Update read
-    if (read) {
-      role.read = read;
-    }
-
-    // Update update
-    if (update) {
-      role.update = update;
-    }
-
-    // Update delete
-    if (del) {
-      role.delete = del;
-    }
-
-    return await this.rolesRepository.save(role);
   }
 
   /**

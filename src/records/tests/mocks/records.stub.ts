@@ -6,7 +6,7 @@ import { userCustomerStub } from '../../../users/tests/mocks/users.stub';
 import { CreateRecordDto } from '../../dtos/create-record.dto';
 import { GetRecordDto } from '../../dtos/get-record.dto';
 import { UpdateRecordDto } from '../../dtos/update-record.dto';
-import { DeleteRecordDto } from 'src/records/dtos/delete-record.dto';
+import { DeleteRecordDto } from '../../dtos/delete-record.dto';
 import { DeleteResult } from 'typeorm';
 
 /**
@@ -32,7 +32,7 @@ export const recordStub: RecordEntity = {
 export const recordsStub: RecordEntity[] = [recordStub];
 
 export const createRecordDtoStub: CreateRecordDto = {
-  typeOfCare: Healthcare.MENTAL_HEALTHCARE,
+  typeOfCare: Healthcare.PRIMARY_HEALTHCARE,
   userId: userCustomerStub.id,
 };
 
