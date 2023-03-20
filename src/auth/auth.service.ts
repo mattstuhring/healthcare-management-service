@@ -1,10 +1,15 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { AuthAccessTokenPayload } from './models/auth-access-token-payload.interface';
 import { UsersService } from '../users/users.service';
-import { GetUserByUsernameDto } from '../users/dtos/get-user-by-username.dto';
 import { UserEntity } from '../users/user.entity';
 import { AuthJwtResponse } from './models/auth-jwt-response.interface';
 import { CreateUserDto } from '../users/dtos/create-user.dto';
@@ -38,14 +43,16 @@ export class AuthService {
    * @returns the user
    */
   async signUpCustomer(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { username, password } = createUserDto;
+    if (
+      createUserDto.roleName &&
+      createUserDto.roleName !== RoleName.CUSTOMER
+    ) {
+      throw new BadRequestException();
+    }
 
-    const user = new CreateUserDto();
-    user.password = password;
-    user.username = username;
-    user.roleName = RoleName.CUSTOMER;
+    createUserDto.roleName = RoleName.CUSTOMER;
 
-    return await this.usersService.createUser(user);
+    return await this.usersService.createUser(createUserDto);
   }
 
   /**
@@ -56,33 +63,31 @@ export class AuthService {
   async login(authLoginUserDto: AuthLoginUserDto): Promise<AuthJwtResponse> {
     const { username, password } = authLoginUserDto;
 
-    const getUserByUsernameDto: GetUserByUsernameDto = {
-      username,
-    };
-
     try {
       // Verify user exists
-      const user: UserEntity = await this.usersService.getUserByUsername(
-        getUserByUsernameDto,
-      );
+      const user: UserEntity = await this.usersService.getUserByUsername({
+        username,
+      });
       if (!user) {
-        throw new Error();
+        throw new NotFoundException();
       }
 
       // Validate password
-      const match = await bcrypt.compare(password, user.password);
-      if (!match) {
-        throw new Error();
-      }
+      await this.validatePassword(password, user.password);
 
       // Create JWT AccessToken & RefreshToken
-      const authJwtResponse: AuthJwtResponse = this.createJwt(user);
-
-      return authJwtResponse;
+      return this.createJwt(user);
     } catch (err) {
-      throw new UnauthorizedException(
-        'Username or password may be incorrect. Please try again',
-      );
+      if (
+        err instanceof NotFoundException ||
+        err instanceof BadRequestException
+      ) {
+        throw new UnauthorizedException(
+          'Username or password may be incorrect. Please try again',
+        );
+      } else {
+        throw new InternalServerErrorException(err.name, err.message);
+      }
     }
   }
 
@@ -119,26 +124,19 @@ export class AuthService {
       ) as AuthRefreshTokenPayload;
 
       // Retrieve user entity
-      const getUserByUsernameDto: GetUserByUsernameDto = {
+      const user: UserEntity = await this.usersService.getUserByUsername({
         username: decodedToken.username,
-      };
-      const user: UserEntity = await this.usersService.getUserByUsername(
-        getUserByUsernameDto,
-      );
+      });
 
-      // Create JWT token w/ AccessToken & RefreshToken
-      const authJwtResponse: AuthJwtResponse = this.createJwt(user);
-
-      return authJwtResponse;
+      // Create new JWT token w/ AccessToken & RefreshToken
+      return this.createJwt(user);
     } catch (err) {
-      throw new UnauthorizedException(
-        'Username or password may be incorrect. Please try again',
-      );
+      throw new UnauthorizedException('Expired token. Please login again.');
     }
   }
 
   /**
-   * Helper function to create JWT AccessToken & RefreshToken
+   * Helper to create JWT AccessToken & RefreshToken
    * @param user
    * @returns AcessToken and RefreshToken
    */
@@ -146,11 +144,10 @@ export class AuthService {
     const { username, role } = user;
 
     // Create AccessToken expiresIn 30 minutes
-    const accessPayload: AuthAccessTokenPayload = {
+    const accessToken: string = this.jwtService.sign({
       username,
       role,
-    };
-    const accessToken: string = this.jwtService.sign(accessPayload);
+    });
 
     // Create RefreshToken expiresIn 24 hours
     const refreshPayload: AuthRefreshTokenPayload = {
@@ -161,5 +158,24 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  /**
+   * Validate password
+   * @param password
+   * @param userPassword
+   * @returns boolean
+   */
+  private async validatePassword(
+    password: string,
+    userPassword: string,
+  ): Promise<boolean> {
+    const match = await bcrypt.compare(password, userPassword);
+
+    if (!match) {
+      throw new BadRequestException();
+    }
+
+    return match;
   }
 }

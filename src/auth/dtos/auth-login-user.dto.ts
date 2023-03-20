@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsEmail,
   IsNotEmpty,
   IsString,
   Matches,
@@ -12,7 +13,7 @@ export class AuthLoginUserDto {
     type: String,
     description: 'This is a required property',
   })
-  @IsString()
+  @IsEmail()
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(20)

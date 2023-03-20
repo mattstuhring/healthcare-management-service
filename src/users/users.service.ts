@@ -68,7 +68,6 @@ export class UsersService {
       } else if (err instanceof NotFoundException) {
         throw new NotFoundException(err.name, err.message);
       } else {
-        console.log(err);
         throw new InternalServerErrorException();
       }
     }
