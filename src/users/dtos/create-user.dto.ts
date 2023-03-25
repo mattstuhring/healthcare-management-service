@@ -61,6 +61,7 @@ export class CreateUserDto {
     description: 'This is an optional property',
   })
   @IsEnum(RoleName)
+  @IsNotEmpty()
   @IsOptional()
   roleName?: RoleName;
 }
