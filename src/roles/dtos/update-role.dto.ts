@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEnum, IsOptional } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
 import { RoleName } from '../constants/role-name.enum';
 
 export class UpdateRoleDto {
@@ -8,6 +8,7 @@ export class UpdateRoleDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsEnum(RoleName)
   name?: RoleName;
 
@@ -16,6 +17,7 @@ export class UpdateRoleDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   create?: boolean;
 
@@ -24,6 +26,7 @@ export class UpdateRoleDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   read?: boolean;
 
@@ -32,6 +35,7 @@ export class UpdateRoleDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   update?: boolean;
 
@@ -40,6 +44,7 @@ export class UpdateRoleDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsBoolean()
   del?: boolean;
 }
