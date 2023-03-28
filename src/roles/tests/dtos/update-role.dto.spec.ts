@@ -27,7 +27,7 @@ describe('CreateRoleDto', () => {
     expect(errors.length).toBe(0);
   });
 
-  it('should pass when optional fields are not present', async () => {
+  it('should pass with no params', async () => {
     // Arrange
     const dtoObject = plainToInstance(UpdateRoleDto, {});
 

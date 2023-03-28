@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Healthcare } from '../constants/record-healthcare.enum';
 
 export class GetRecordsFilterDto {
@@ -8,6 +8,7 @@ export class GetRecordsFilterDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsEnum(Healthcare)
   typeOfCare?: Healthcare;
 
@@ -16,6 +17,7 @@ export class GetRecordsFilterDto {
     description: 'This is an optional property',
   })
   @IsOptional()
+  @IsNotEmpty()
   @IsString()
   search?: string;
 }

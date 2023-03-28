@@ -62,7 +62,7 @@ describe('CreateRoleDto', () => {
       expect(errors.length).toBe(0);
     });
 
-    it('should fail when roleName is not an enum', async () => {
+    it('should fail when name is not an enum', async () => {
       // Arrange
       const testDto: any = {
         name: 'test',
