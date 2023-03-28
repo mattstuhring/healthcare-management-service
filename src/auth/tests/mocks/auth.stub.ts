@@ -17,7 +17,7 @@ import { AuthRefreshTokenPayload } from '../../models/auth-refresh-token-payload
 export const TEST_USERNAME = 'test@email.com';
 const TEST_ACCESS_TOKEN = 'test-access-token';
 const TEST_REFRESH_TOKEN = 'test-refresh-token';
-const TEST_PASSWORD = 'password';
+const TEST_PASSWORD = 'Password1';
 
 export const authLoginUserDtoStub: AuthLoginUserDto = {
   username: TEST_USERNAME,

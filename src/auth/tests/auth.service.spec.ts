@@ -114,6 +114,10 @@ describe('AuthService', () => {
         .spyOn(AuthService.prototype as any, 'createJwt')
         .mockReturnValue(authJwtResponseStub);
 
+      jest
+        .spyOn(AuthService.prototype as any, 'validatePassword')
+        .mockReturnValue(true);
+
       // Act
       const response = await authService.login(authLoginUserDtoStub);
 
@@ -128,6 +132,10 @@ describe('AuthService', () => {
       const createJwtSpy = jest
         .spyOn(AuthService.prototype as any, 'createJwt')
         .mockReturnValue(authJwtResponseStub);
+
+      jest
+        .spyOn(AuthService.prototype as any, 'validatePassword')
+        .mockReturnValue(true);
 
       // Act
       await authService.login(authLoginUserDtoStub);
@@ -170,18 +178,18 @@ describe('AuthService', () => {
       ).rejects.toThrowError(UnauthorizedException);
       expect(spy).toBeCalledTimes(1);
     });
-  });
 
-  it('should throw InternalServerErrorException', async () => {
-    // Arrange
-    jest
-      .spyOn(usersService, 'getUserByUsername')
-      .mockRejectedValue(new Error());
+    it('should throw InternalServerErrorException', async () => {
+      // Arrange
+      jest
+        .spyOn(usersService, 'getUserByUsername')
+        .mockRejectedValue(new Error());
 
-    // Act & Assert
-    await expect(authService.login(authLoginUserDtoStub)).rejects.toThrowError(
-      InternalServerErrorException,
-    );
+      // Act & Assert
+      await expect(
+        authService.login(authLoginUserDtoStub),
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
   });
 
   /**

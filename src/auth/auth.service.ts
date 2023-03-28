@@ -8,7 +8,6 @@ import {
 import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { AuthAccessTokenPayload } from './models/auth-access-token-payload.interface';
 import { UsersService } from '../users/users.service';
 import { UserEntity } from '../users/user.entity';
 import { AuthJwtResponse } from './models/auth-jwt-response.interface';
@@ -68,6 +67,7 @@ export class AuthService {
       const user: UserEntity = await this.usersService.getUserByUsername({
         username,
       });
+
       if (!user) {
         throw new NotFoundException();
       }
