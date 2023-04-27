@@ -19,14 +19,11 @@ import {
   roleCustomerStub,
 } from '../../roles/tests/mocks/roles.stub';
 import {
-  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { GetRecordDto } from '../../records/dtos/get-record.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { RoleName } from '../../roles/constants/role-name.enum';
-import { RoleEntity } from 'src/roles/role.entity';
 
 describe('UsersService', () => {
   let usersService: UsersService;

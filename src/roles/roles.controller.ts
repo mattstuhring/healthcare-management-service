@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   HttpCode,
-  Logger,
   Param,
   Patch,
   Post,
@@ -20,16 +19,11 @@ import { RolesGuard } from './roles.guard';
 import { RolesService } from './roles.service';
 import { AuthJwtGuard } from '../auth/auth-jwt.guard';
 import {
-  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dtos/update-role.dto';
 import { DeleteRoleDto } from './dtos/delete-role.dto';
