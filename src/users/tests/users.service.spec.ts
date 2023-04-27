@@ -25,6 +25,8 @@ import {
 } from '@nestjs/common';
 import { GetRecordDto } from '../../records/dtos/get-record.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
+import { RoleName } from '../../roles/constants/role-name.enum';
+import { RoleEntity } from 'src/roles/role.entity';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -295,12 +297,20 @@ describe('UsersService', () => {
 
     it('should retrieve role by name', async () => {
       // Arrange
+
+      const payload: UpdateUserDto = {
+        name: 'Jane Doe',
+        dateOfBirth: '22/22/2222',
+        username: 'janedoe@email.com',
+        roleName: RoleName.CUSTOMER,
+      };
+
       const spy = jest
         .spyOn(UsersService.prototype as any, 'getRoleByName')
         .mockReturnValue(roleCustomerStub);
 
       // Act
-      await usersService.updateUser(getUserDtoStub, updateUserDtoStub);
+      await usersService.updateUser(getUserDtoStub, payload);
 
       // Assert
       expect(spy).toBeCalledTimes(1);
@@ -308,7 +318,7 @@ describe('UsersService', () => {
 
     it('should not retrieve role', async () => {
       // Arrange
-      const getRoleByNamespy = jest.spyOn(
+      const getRoleByNameSpy = jest.spyOn(
         UsersService.prototype as any,
         'getRoleByName',
       );
@@ -318,14 +328,7 @@ describe('UsersService', () => {
       await usersService.updateUser(getUserDtoStub, updateUserDtoStub);
 
       // Assert
-      expect(getRoleByNamespy).toBeCalledTimes(0);
-    });
-
-    it('should throw BadRequestException', async () => {
-      // Act & Assert
-      await expect(
-        usersService.updateUser(new GetRecordDto(), new UpdateUserDto()),
-      ).rejects.toThrowError(BadRequestException);
+      expect(getRoleByNameSpy).toBeCalledTimes(0);
     });
   });
 

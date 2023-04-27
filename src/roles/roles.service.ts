@@ -4,8 +4,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
   Logger,
-  BadRequestException,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -100,6 +98,15 @@ export class RolesService {
     }
 
     return role;
+  }
+
+  /**
+   * Get Roles
+   * @param
+   * @returns
+   */
+  async getRoles(): Promise<RoleEntity[]> {
+    return await this.rolesRepository.find();
   }
 
   /**

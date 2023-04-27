@@ -33,6 +33,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from './dtos/update-role.dto';
 import { DeleteRoleDto } from './dtos/delete-role.dto';
+import { CommonApiErrorResponses } from '../global/decorators/common-api-error-responses.decorator';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -40,19 +41,15 @@ import { DeleteRoleDto } from './dtos/delete-role.dto';
 @UseGuards(RolesGuard)
 export class RolesController {
   private rolesService: RolesService;
-  private logger = new Logger('RolesController');
 
   constructor(rolesService: RolesService) {
     this.rolesService = rolesService;
   }
 
   @Post()
-  @ApiCreatedResponse({ description: 'Created Succesfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiConflictResponse({ description: 'Duplicate entity' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiCreatedResponse({ description: 'The resource was created Succesfully' })
+  @ApiConflictResponse({ description: 'The resource aleady exists' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   @HttpCode(201)
   createRole(@Body() createRoleDto: CreateRoleDto): Promise<RoleEntity> {
@@ -60,12 +57,8 @@ export class RolesController {
   }
 
   @Get(':id')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   getRole(@Param() getRoleDto: GetRoleDto): Promise<RoleEntity> {
     return this.rolesService.getRole(getRoleDto);
@@ -73,24 +66,26 @@ export class RolesController {
 
   @Get('name/:name')
   @ApiOkResponse({ description: 'The resource was returned successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   getRoleByName(
-    @Param('name') getRoleByNameDto: GetRoleByNameDto,
+    @Param() getRoleByNameDto: GetRoleByNameDto,
   ): Promise<RoleEntity> {
     return this.rolesService.getRoleByName(getRoleByNameDto);
   }
 
+  @Get()
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
+  getRoles(): Promise<RoleEntity[]> {
+    return this.rolesService.getRoles();
+  }
+
   @Patch(':id')
-  @ApiOkResponse({ description: 'The resource was updated successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   updateRole(
     @Param() getRoleDto: GetRoleDto,
@@ -101,13 +96,9 @@ export class RolesController {
 
   @Delete(':id')
   @ApiNoContentResponse({
-    description: 'The resource was returned successfully',
+    description: 'The resource was deleted successfully',
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
   deleteRole(@Param() deleteRoleDto: DeleteRoleDto): Promise<void> {

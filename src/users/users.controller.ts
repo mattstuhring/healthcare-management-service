@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { RolesGuard } from '../roles/roles.guard';
@@ -18,20 +19,17 @@ import { UsersService } from './users.service';
 import { Roles } from '../roles/decorators/roles.decorator';
 import { RoleName } from '../roles/constants/role-name.enum';
 import {
-  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
-  ApiNotFoundResponse,
   ApiOkResponse,
   ApiTags,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { GetUserDto } from './dtos/get-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
+import { CommonApiErrorResponses } from '../global/decorators/common-api-error-responses.decorator';
+import { GetUsersDto } from './dtos/get-users.dto';
 
 @ApiTags('Users')
 @Controller('users')
@@ -45,13 +43,9 @@ export class UsersController {
   }
 
   @Post()
-  @ApiCreatedResponse({ description: 'Created succesfully' })
-  @ApiConflictResponse({ description: 'Duplicate entity' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiCreatedResponse({ description: 'The resource was created Succesfully' })
+  @ApiConflictResponse({ description: 'The resource aleady exists' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   @HttpCode(201)
   createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
@@ -59,38 +53,34 @@ export class UsersController {
   }
 
   @Get(':id')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getUser(@Param() getUserDto: GetUserDto): Promise<UserEntity> {
     return this.usersService.getUser(getUserDto);
   }
 
   @Get('username/:username')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getUserByUsername(
-    @Param('username') getUserByUsernameDto: GetUserByUsernameDto,
+    @Param() getUserByUsernameDto: GetUserByUsernameDto,
   ): Promise<UserEntity> {
     return this.usersService.getUserByUsername(getUserByUsernameDto);
   }
 
+  @Get()
+  @ApiOkResponse({ description: 'The resource was fetched successfully' })
+  @CommonApiErrorResponses()
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
+  getUsers(@Query() getUsersDto: GetUsersDto): Promise<UserEntity[]> {
+    return this.usersService.getUsers(getUsersDto);
+  }
+
   @Patch(':id')
   @ApiOkResponse({ description: 'The resource was updated successfully' })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   updateUser(
     @Param() getUserDto: GetUserDto,
@@ -101,13 +91,9 @@ export class UsersController {
 
   @Delete(':id')
   @ApiNoContentResponse({
-    description: 'The resource was returned successfully',
+    description: 'The resource was deleted successfully',
   })
-  @ApiBadRequestResponse({ description: 'Bad Request' })
-  @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiForbiddenResponse({ description: 'Unauthorized Request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
-  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @CommonApiErrorResponses()
   @Roles(RoleName.ADMIN)
   @HttpCode(204)
   deleteUser(@Param() deleteUserDto: DeleteUserDto): Promise<void> {

@@ -25,27 +25,25 @@ export class AuthController {
   }
 
   @Post('signup')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
+  @ApiOkResponse({ description: 'The resource was created successfully' })
   @ApiConflictResponse({ description: 'Duplicate entity' })
   @ApiBadRequestResponse({ description: 'Bad request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   signUpCustomer(@Body() createUserDto: CreateUserDto) {
     return this.authService.signUpCustomer(createUserDto);
   }
 
   @Post('login')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
+  @ApiOkResponse({ description: 'The user was logged in successfully' })
+  @ApiNotFoundResponse({ description: 'The resource was not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   login(@Body() authLoginUserDto: AuthLoginUserDto): Promise<AuthJwtResponse> {
     return this.authService.login(authLoginUserDto);
   }
 
   @Post('logout')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
+  @ApiOkResponse({ description: 'The user was logged out successfully' })
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @UseGuards(AuthJwtGuard)
   logout(): Promise<{ message: string }> {
@@ -53,9 +51,8 @@ export class AuthController {
   }
 
   @Post('refresh-token')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
+  @ApiOkResponse({ description: 'The resource was created successfully' })
   @ApiUnauthorizedResponse({ description: 'Unauthenticated request' })
-  @ApiNotFoundResponse({ description: 'Resource not found' })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   @UseGuards(AuthJwtGuard)
   refreshToken(

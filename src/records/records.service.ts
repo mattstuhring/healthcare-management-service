@@ -87,7 +87,10 @@ export class RecordsService {
     getRecordsFilterDto: GetRecordsFilterDto,
   ): Promise<RecordEntity[]> {
     const { typeOfCare, search } = getRecordsFilterDto;
-    const query = this.recordsRepository.createQueryBuilder('record');
+
+    const query = this.recordsRepository
+      .createQueryBuilder('record')
+      .innerJoinAndSelect('record.user', 'user');
 
     if (typeOfCare) {
       query.andWhere('LOWER(record.typeOfCare) = LOWER(:typeOfCare)', {
@@ -97,7 +100,7 @@ export class RecordsService {
 
     if (search) {
       query.andWhere(
-        'LOWER(record.name) = LOWER(:name) OR LOWER(record.dateOfBirth) = LOWER(:dateOfBirth) OR LOWER(record.healthStatus) = LOWER(:healthStatus)',
+        'LOWER(user.name) = LOWER(:name) OR LOWER(record.healthStatus) = LOWER(:healthStatus)',
         { name: search, dateOfBirth: search, healthStatus: search },
       );
     }
@@ -105,12 +108,7 @@ export class RecordsService {
     try {
       return await query.getMany();
     } catch (error) {
-      this.logger.error(
-        `Failed to get records. Filters: ${JSON.stringify(
-          getRecordsFilterDto,
-        )}`,
-      );
-
+      console.log(error);
       throw new InternalServerErrorException();
     }
   }

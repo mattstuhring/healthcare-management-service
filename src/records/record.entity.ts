@@ -3,13 +3,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { HealthStatus } from './constants/record-health-status.enum';
 import { Healthcare } from './constants/record-healthcare.enum';
-import { Exclude } from 'class-transformer';
 
 @Entity({ name: 'record' })
 export class RecordEntity {
@@ -28,7 +28,7 @@ export class RecordEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.records, { eager: false })
-  @Exclude()
+  @ManyToOne(() => UserEntity, (user) => user.records, { eager: true })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 }

@@ -27,4 +27,5 @@ export const recordsRepositoryMock = jest.fn(() => ({
 export const createQueryBuilderMock: any = {
   andWhere: jest.fn().mockReturnThis(),
   getMany: jest.fn().mockResolvedValue(recordsStub),
+  innerJoinAndSelect: jest.fn().mockReturnThis(),
 };

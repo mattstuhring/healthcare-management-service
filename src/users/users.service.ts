@@ -18,6 +18,7 @@ import { GetUserDto } from './dtos/get-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
 import { RoleName } from '../roles/constants/role-name.enum';
+import { GetUsersDto } from './dtos/get-users.dto';
 
 /**
  * User Service - Supports user creation and management.
@@ -110,6 +111,34 @@ export class UsersService {
   }
 
   /**
+   * Get Users - Supports filter by roleName
+   * @param getUsersDto
+   * @returns users
+   */
+  async getUsers(getUsersDto: GetUsersDto): Promise<UserEntity[]> {
+    const { roleName } = getUsersDto;
+    console.log(roleName);
+
+    const query = this.usersRepository.createQueryBuilder('user');
+
+    if (roleName) {
+      const role: RoleEntity = await this.getRoleByName(roleName);
+      console.log(role.id);
+
+      query.where('user.role_id = :roleId', {
+        roleId: role.id,
+      });
+    }
+
+    try {
+      return await query.getMany();
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+  }
+
+  /**
    * Update User
    * @param getUserDto
    * @param updateUserDto
@@ -119,30 +148,10 @@ export class UsersService {
     getUserDto: GetUserDto,
     updateUserDto: UpdateUserDto,
   ): Promise<UserEntity> {
-    const { username, name, dateOfBirth, roleName } = updateUserDto;
-
-    // Empty request body
-    if (!username && !roleName) {
-      throw new BadRequestException();
-    }
+    const { roleName } = updateUserDto;
 
     // Retrieve user
     const user: UserEntity = await this.getUser(getUserDto);
-
-    // Update username
-    if (username) {
-      user.username = username;
-    }
-
-    // Update name
-    if (name) {
-      user.name = name;
-    }
-
-    // Update dateOfBirth
-    if (dateOfBirth) {
-      user.dateOfBirth = dateOfBirth;
-    }
 
     // Update user role
     if (roleName) {
@@ -150,7 +159,9 @@ export class UsersService {
       user.role = role;
     }
 
-    return await this.usersRepository.save(user);
+    delete updateUserDto.roleName;
+
+    return await this.usersRepository.save({ ...user, ...updateUserDto });
   }
 
   /**

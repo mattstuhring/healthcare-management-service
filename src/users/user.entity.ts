@@ -36,7 +36,7 @@ export class UserEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updateDate: Date;
 
-  @OneToMany(() => RecordEntity, (record) => record.user, { eager: true })
+  @OneToMany(() => RecordEntity, (record) => record.user, { eager: false })
   @Exclude()
   records: RecordEntity[];
 
