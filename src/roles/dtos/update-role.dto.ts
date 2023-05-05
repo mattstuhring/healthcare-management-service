@@ -46,5 +46,5 @@ export class UpdateRoleDto {
   @IsOptional()
   @IsNotEmpty()
   @IsBoolean()
-  del?: boolean;
+  delete?: boolean;
 }

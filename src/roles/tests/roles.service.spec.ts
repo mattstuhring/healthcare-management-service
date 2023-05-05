@@ -52,7 +52,7 @@ describe('RolesService', () => {
    * Create Role
    */
   describe('createRole()', () => {
-    it('should return record', async () => {
+    it('should return role', async () => {
       // Arrange
       const spy = jest.spyOn(rolesService, 'createRole');
 
@@ -64,12 +64,11 @@ describe('RolesService', () => {
       expect(response).toEqual(roleCustomerStub);
     });
 
-    it('should create & save record', async () => {
+    it('should create & save role', async () => {
       // Act
       await rolesService.createRole(createRoleDtoStub);
 
       // Assert
-      expect(rolesRepository.create).toBeCalledTimes(1);
       expect(rolesRepository.save).toBeCalledTimes(1);
     });
 
@@ -107,7 +106,7 @@ describe('RolesService', () => {
 
     it('should retrieve role', async () => {
       // Arrange
-      const spy = jest.spyOn(rolesRepository, 'findOne');
+      const spy = jest.spyOn(rolesRepository, 'findOneBy');
 
       // Act
       await rolesService.getRole(getRoleDtoStub);
@@ -118,7 +117,7 @@ describe('RolesService', () => {
 
     it('should throw NotFoundException', async () => {
       // Arrange
-      jest.spyOn(rolesRepository, 'findOne').mockResolvedValue(null);
+      jest.spyOn(rolesRepository, 'findOneBy').mockResolvedValue(null);
 
       // Act & Assert
       await expect(rolesService.getRole(getRoleDtoStub)).rejects.toThrowError(
@@ -145,7 +144,7 @@ describe('RolesService', () => {
 
     it('should retrieve role', async () => {
       // Arrange
-      const spy = jest.spyOn(rolesRepository, 'findOne');
+      const spy = jest.spyOn(rolesRepository, 'findOneBy');
 
       // Act
       await rolesService.getRoleByName(getRoleByNameDtoStub);
@@ -156,7 +155,7 @@ describe('RolesService', () => {
 
     it('should throw NotFoundException', async () => {
       // Arrange
-      jest.spyOn(rolesRepository, 'findOne').mockResolvedValue(null);
+      jest.spyOn(rolesRepository, 'findOneBy').mockResolvedValue(null);
 
       // Act & Assert
       await expect(

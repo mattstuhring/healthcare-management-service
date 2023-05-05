@@ -41,5 +41,5 @@ export class CreateRoleDto {
   })
   @IsNotEmpty()
   @IsBoolean()
-  del: boolean;
+  delete: boolean;
 }

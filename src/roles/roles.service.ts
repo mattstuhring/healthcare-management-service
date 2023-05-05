@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
   Logger,
 } from '@nestjs/common';
@@ -34,27 +33,19 @@ export class RolesService {
    * @returns the role
    */
   async createRole(createRoleDto: CreateRoleDto): Promise<RoleEntity> {
-    const { name, create, read, update, del } = createRoleDto;
-
     try {
-      const role = this.rolesRepository.create({
-        name,
-        create,
-        read,
-        update,
-        delete: del,
+      return await this.rolesRepository.save({
+        ...createRoleDto,
       });
-
-      await this.rolesRepository.save(role);
-
-      return role;
-    } catch (error) {
-      if (error.code === '23505') {
-        // Postgres duplicate role error code
-        throw new ConflictException('Role already exists');
-      } else {
-        throw new InternalServerErrorException();
+    } catch (err) {
+      // Postgres duplicate role error code
+      if (err.code === '23505') {
+        throw new ConflictException(
+          `Role ${createRoleDto.name} already exists`,
+        );
       }
+
+      throw err;
     }
   }
 
@@ -66,11 +57,7 @@ export class RolesService {
   async getRole(getRoleDto: GetRoleDto): Promise<RoleEntity> {
     const { id } = getRoleDto;
 
-    const role: RoleEntity = await this.rolesRepository.findOne({
-      where: {
-        id,
-      },
-    });
+    const role = await this.rolesRepository.findOneBy({ id });
 
     if (!role) {
       throw new NotFoundException(`Role with ID: ${id} not found`);
@@ -87,11 +74,7 @@ export class RolesService {
   async getRoleByName(getRoleByNameDto: GetRoleByNameDto): Promise<RoleEntity> {
     const { name } = getRoleByNameDto;
 
-    const role: RoleEntity = await this.rolesRepository.findOne({
-      where: {
-        name,
-      },
-    });
+    const role = await this.rolesRepository.findOneBy({ name });
 
     if (!role) {
       throw new NotFoundException(`Role: ${name}, not found`);
@@ -119,17 +102,9 @@ export class RolesService {
     getRoleDto: GetRoleDto,
     updateRoleDto: UpdateRoleDto,
   ): Promise<RoleEntity> {
-    try {
-      await this.rolesRepository.update({ id: getRoleDto.id }, updateRoleDto);
+    await this.rolesRepository.update(getRoleDto.id, updateRoleDto);
 
-      return await this.getRole(getRoleDto);
-    } catch (err) {
-      if (err instanceof NotFoundException) {
-        throw new NotFoundException();
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    return await this.getRole(getRoleDto);
   }
 
   /**
@@ -144,7 +119,5 @@ export class RolesService {
     if (result.affected === 0) {
       throw new NotFoundException(`Role with ID: ${id} not found`);
     }
-
-    return;
   }
 }

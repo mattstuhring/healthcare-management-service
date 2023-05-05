@@ -13,7 +13,7 @@ import { deleteResult, roleCustomerStub } from './roles.stub';
  * We can use mocks to verify that our code is calling the dependencies in an expected way.
  */
 export const rolesRepositoryMock = jest.fn(() => ({
-  findOne: jest.fn().mockResolvedValue(roleCustomerStub),
+  findOneBy: jest.fn().mockResolvedValue(roleCustomerStub),
   create: jest.fn().mockResolvedValue(roleCustomerStub),
   save: jest.fn().mockResolvedValue(roleCustomerStub),
   update: jest.fn().mockResolvedValue(roleCustomerStub),

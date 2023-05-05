@@ -61,7 +61,7 @@ export const createRoleDtoStub: CreateRoleDto = {
   create: true,
   read: true,
   update: true,
-  del: true,
+  delete: true,
 };
 
 export const getRoleDtoStub: GetRoleDto = {
@@ -77,7 +77,7 @@ export const updateRoleDtoStub: UpdateRoleDto = {
   create: true,
   read: true,
   update: false,
-  del: false,
+  delete: false,
 };
 
 export const deleteRoleDtoStub: DeleteRoleDto = {
