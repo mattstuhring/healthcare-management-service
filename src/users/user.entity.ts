@@ -9,7 +9,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { AppointmentEntity } from '../appiontments/appointment.entity';
 import { RecordEntity } from '../records/record.entity';
 import { RoleEntity } from '../roles/role.entity';
 
@@ -40,10 +39,6 @@ export class UserEntity {
   @OneToMany(() => RecordEntity, (record) => record.user, { eager: false })
   @Exclude()
   records: RecordEntity[];
-
-  @OneToMany(() => AppointmentEntity, (appt) => appt.user, { eager: false })
-  @Exclude()
-  appointments: AppointmentEntity[];
 
   @ManyToOne(() => RoleEntity, (role: RoleEntity) => role.users, {
     eager: true,

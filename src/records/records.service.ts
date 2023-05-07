@@ -46,16 +46,15 @@ export class RecordsService {
     const getUserDto: GetUserDto = {
       id: userId,
     };
+
     const user: UserEntity = await this.usersService.getUser(getUserDto);
 
-    const record = this.recordsRepository.create({
+    return await this.recordsRepository.save({
       typeOfCare,
       healthStatus: HealthStatus.UNKNOWN,
       updatedAt: new Date(),
       user,
     });
-
-    return await this.recordsRepository.save(record);
   }
 
   /**
@@ -65,7 +64,8 @@ export class RecordsService {
    */
   async getRecord(getRecordDto: GetRecordDto): Promise<RecordEntity> {
     const { id } = getRecordDto;
-    const record: RecordEntity = await this.recordsRepository.findOne({
+
+    const record: RecordEntity | null = await this.recordsRepository.findOne({
       where: {
         id,
       },
@@ -108,7 +108,6 @@ export class RecordsService {
     try {
       return await query.getMany();
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException();
     }
   }

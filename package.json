@@ -41,7 +41,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.11",
-    "typeorm-extension": "^2.7.0"
+    "typeorm-extension": "^2.8.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -75,7 +75,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "test",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

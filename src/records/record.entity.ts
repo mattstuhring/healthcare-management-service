@@ -28,7 +28,11 @@ export class RecordEntity {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => UserEntity, (user) => user.records, { eager: true })
+  @ManyToOne(() => UserEntity, (user) => user.records, {
+    eager: true,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 }
