@@ -13,7 +13,7 @@ import { deleteResult, recordsStub, recordStub } from './records.stub';
  * We can use mocks to verify that our code is calling the dependencies in an expected way.
  */
 export const recordsRepositoryMock = jest.fn(() => ({
-  findOne: jest.fn().mockResolvedValue(recordStub),
+  findOneBy: jest.fn().mockResolvedValue(recordStub),
   create: jest.fn().mockResolvedValue(recordStub),
   save: jest.fn().mockResolvedValue(recordStub),
   update: jest.fn().mockResolvedValue(recordStub),

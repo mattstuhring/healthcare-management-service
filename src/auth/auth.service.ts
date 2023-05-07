@@ -85,9 +85,9 @@ export class AuthService {
         throw new UnauthorizedException(
           'Username or password may be incorrect. Please try again',
         );
-      } else {
-        throw new InternalServerErrorException(err.name, err.message);
       }
+
+      throw err;
     }
   }
 

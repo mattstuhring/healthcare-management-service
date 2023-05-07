@@ -2,7 +2,6 @@ import {
   Injectable,
   NotFoundException,
   Logger,
-  InternalServerErrorException,
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -16,7 +15,6 @@ import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
 import { RecordEntity } from './record.entity';
 import { UserEntity } from '../users/user.entity';
 import { UsersService } from '../users/users.service';
-import { GetUserDto } from '../users/dtos/get-user.dto';
 
 /**
  * Records Service - Supports CRUD operations for managing heath records.
@@ -43,11 +41,13 @@ export class RecordsService {
   async createRecord(createRecordDto: CreateRecordDto): Promise<RecordEntity> {
     const { typeOfCare, userId } = createRecordDto;
 
-    const getUserDto: GetUserDto = {
+    const user: UserEntity = await this.usersService.getUser({
       id: userId,
-    };
+    });
 
-    const user: UserEntity = await this.usersService.getUser(getUserDto);
+    if (!user) {
+      throw new NotFoundException();
+    }
 
     return await this.recordsRepository.save({
       typeOfCare,
@@ -65,10 +65,8 @@ export class RecordsService {
   async getRecord(getRecordDto: GetRecordDto): Promise<RecordEntity> {
     const { id } = getRecordDto;
 
-    const record: RecordEntity | null = await this.recordsRepository.findOne({
-      where: {
-        id,
-      },
+    const record = await this.recordsRepository.findOneBy({
+      id,
     });
 
     if (!record) {
@@ -105,11 +103,7 @@ export class RecordsService {
       );
     }
 
-    try {
-      return await query.getMany();
-    } catch (error) {
-      throw new InternalServerErrorException();
-    }
+    return await query.getMany();
   }
 
   /**
@@ -132,17 +126,7 @@ export class RecordsService {
     // Retrieve record
     const record = await this.getRecord(getRecordDto);
 
-    // Update type of care
-    if (typeOfCare) {
-      record.typeOfCare = typeOfCare;
-    }
-
-    // Update health status
-    if (healthStatus) {
-      record.healthStatus = healthStatus;
-    }
-
-    return await this.recordsRepository.save(record);
+    return await this.recordsRepository.save({ ...record, ...updateRecordDto });
   }
 
   /**
@@ -157,7 +141,5 @@ export class RecordsService {
     if (!result || result.affected === 0) {
       throw new NotFoundException(`Record with ID: ${id} not found`);
     }
-
-    return;
   }
 }

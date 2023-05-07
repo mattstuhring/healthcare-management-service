@@ -178,18 +178,6 @@ describe('AuthService', () => {
       ).rejects.toThrowError(UnauthorizedException);
       expect(spy).toBeCalledTimes(1);
     });
-
-    it('should throw InternalServerErrorException', async () => {
-      // Arrange
-      jest
-        .spyOn(usersService, 'getUserByUsername')
-        .mockRejectedValue(new Error());
-
-      // Act & Assert
-      await expect(
-        authService.login(authLoginUserDtoStub),
-      ).rejects.toThrowError(InternalServerErrorException);
-    });
   });
 
   /**

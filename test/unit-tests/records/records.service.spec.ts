@@ -135,13 +135,13 @@ describe('RecordsService', () => {
 
       // Assert
       expect(spy).toHaveBeenCalledWith(getRecordDtoStub);
-      expect(recordsRepository.findOne).toBeCalledTimes(1);
+      expect(recordsRepository.findOneBy).toBeCalledTimes(1);
       expect(response).toEqual(recordStub);
     });
 
     it('should throw NotFoundException', async () => {
       // Arrange
-      jest.spyOn(recordsRepository, 'findOne').mockResolvedValue(null);
+      jest.spyOn(recordsRepository, 'findOneBy').mockResolvedValue(null);
 
       // Act & Assert
       await expect(
@@ -228,18 +228,6 @@ describe('RecordsService', () => {
       expect(createQueryBuilderMock.andWhere).toBeCalledTimes(0);
       expect(response).toEqual(result);
     });
-
-    it('should throw InternalServerError exception', async () => {
-      // Arrange
-      jest
-        .spyOn(createQueryBuilderMock, 'getMany')
-        .mockRejectedValue(new Error());
-
-      // Act & Assert
-      await expect(
-        recordsService.getRecords(new GetRecordsFilterDto()),
-      ).rejects.toThrowError(InternalServerErrorException);
-    });
   });
 
   /**
@@ -276,11 +264,11 @@ describe('RecordsService', () => {
 
     it('should update record type of care', async () => {
       // Arrange
-      const updatedRecord: RecordEntity = { ...recordStub };
+      const updatedRecord = { ...recordStub };
       updatedRecord.typeOfCare = Healthcare.SPECIALTY_HEALTHCARE;
 
       // Act
-      await recordsService.updateRecord(getRecordDtoStub, updateRecordDtoStub);
+      await recordsService.updateRecord(getRecordDtoStub, updatedRecord);
 
       // Assert
       expect(recordsRepository.save).toBeCalledTimes(1);
@@ -289,7 +277,7 @@ describe('RecordsService', () => {
 
     it('should update record health status', async () => {
       // Arrange
-      const updatedRecord: RecordEntity = { ...recordStub };
+      const updatedRecord = { ...recordStub };
       updatedRecord.healthStatus = HealthStatus.EXCELLENT;
 
       // Act
