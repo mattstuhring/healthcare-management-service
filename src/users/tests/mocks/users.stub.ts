@@ -49,6 +49,7 @@ export const userAdminStub: UserEntity = {
   updateDate,
   records: [],
   role: roleAdminStub,
+  appointments: [],
 };
 
 export const userEmployeeStub: UserEntity = {
@@ -61,6 +62,7 @@ export const userEmployeeStub: UserEntity = {
   updateDate,
   records: [],
   role: roleEmployeeStub,
+  appointments: [],
 };
 
 export const userCustomerStub: UserEntity = {
@@ -73,6 +75,7 @@ export const userCustomerStub: UserEntity = {
   updateDate,
   records: [],
   role: roleCustomerStub,
+  appointments: [],
 };
 
 export const deleteResult: DeleteResult = { raw: [], affected: 1 };

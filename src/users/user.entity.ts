@@ -1,5 +1,3 @@
-import { RecordEntity } from '../records/record.entity';
-import { RoleEntity } from '../roles/role.entity';
 import {
   Column,
   CreateDateColumn,
@@ -11,6 +9,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { AppointmentEntity } from '../appiontments/appointment.entity';
+import { RecordEntity } from '../records/record.entity';
+import { RoleEntity } from '../roles/role.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -40,8 +41,13 @@ export class UserEntity {
   @Exclude()
   records: RecordEntity[];
 
+  @OneToMany(() => AppointmentEntity, (appt) => appt.user, { eager: false })
+  @Exclude()
+  appointments: AppointmentEntity[];
+
   @ManyToOne(() => RoleEntity, (role: RoleEntity) => role.users, {
     eager: true,
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'role_id' })
   role: RoleEntity;

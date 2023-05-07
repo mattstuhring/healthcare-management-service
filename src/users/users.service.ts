@@ -1,7 +1,6 @@
 import {
   ConflictException,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,12 +10,10 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { RoleEntity } from '../roles/role.entity';
 import { RolesService } from '../roles/roles.service';
-import { GetRoleByNameDto } from '../roles/dtos/get-role-by-name.dto';
 import { GetUserByUsernameDto } from './dtos/get-user-by-username.dto';
 import { GetUserDto } from './dtos/get-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { DeleteUserDto } from './dtos/delete-user.dto';
-import { RoleName } from '../roles/constants/role-name.enum';
 import { GetUsersDto } from './dtos/get-users.dto';
 
 /**
@@ -42,34 +39,33 @@ export class UsersService {
    * @returns the user
    */
   async createUser(createUserDto: CreateUserDto): Promise<UserEntity> {
-    const { username, password, name, dateOfBirth, roleName } = createUserDto;
+    const { password, roleName } = createUserDto;
 
     try {
       // Encrypt user password
       const hashedPassword: string = await this.encryptPassword(password);
 
       // Retrieve RBAC role to be assigned
-      const role: RoleEntity = await this.getRoleByName(roleName);
+      let role: RoleEntity = new RoleEntity();
+      if (roleName) {
+        role = await this.rolesService.getRoleByName({ name: roleName });
+      }
 
       // Create the user entity
-      const user = this.usersRepository.create({
-        username,
+      return await this.usersRepository.save({
+        ...createUserDto,
         password: hashedPassword,
-        name,
-        dateOfBirth,
         role,
       });
-
-      return await this.usersRepository.save(user);
     } catch (err) {
       if (err.code === '23505') {
         // Postgres error code 23505 = duplicate username
-        throw new ConflictException('Username already exists');
-      } else if (err instanceof NotFoundException) {
-        throw new NotFoundException(err.name, err.message);
-      } else {
-        throw new InternalServerErrorException();
+        throw new ConflictException(
+          `Username ${createUserDto.name} already exists`,
+        );
       }
+
+      throw err;
     }
   }
 
@@ -98,9 +94,9 @@ export class UsersService {
   async getUserByUsername(
     getUserByusernameDto: GetUserByUsernameDto,
   ): Promise<UserEntity> {
-    const { username } = getUserByusernameDto;
-
-    const user = await this.usersRepository.findOneBy({ username });
+    const user = await this.usersRepository.findOneBy({
+      ...getUserByusernameDto,
+    });
 
     if (!user) {
       throw new NotFoundException();
@@ -116,25 +112,20 @@ export class UsersService {
    */
   async getUsers(getUsersDto: GetUsersDto): Promise<UserEntity[]> {
     const { roleName } = getUsersDto;
-    console.log(roleName);
 
     const query = this.usersRepository.createQueryBuilder('user');
 
     if (roleName) {
-      const role: RoleEntity = await this.getRoleByName(roleName);
-      console.log(role.id);
+      const role: RoleEntity = await this.rolesService.getRoleByName({
+        name: roleName,
+      });
 
       query.where('user.role_id = :roleId', {
         roleId: role.id,
       });
     }
 
-    try {
-      return await query.getMany();
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException();
-    }
+    return await query.getMany();
   }
 
   /**
@@ -154,7 +145,9 @@ export class UsersService {
 
     // Update user role
     if (roleName) {
-      const role: RoleEntity = await this.getRoleByName(roleName);
+      const role: RoleEntity = await this.rolesService.getRoleByName({
+        name: roleName,
+      });
       user.role = role;
     }
 
@@ -175,30 +168,11 @@ export class UsersService {
     if (!result || result.affected === 0) {
       throw new NotFoundException(`User with ID: ${id} not found`);
     }
-
-    return;
   }
 
   // Encrypt user password w/default 10 saltRounds
   private async encryptPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
     return await bcrypt.hash(password, salt);
-  }
-
-  // Retrieve RBAC role by name
-  private async getRoleByName(roleName: RoleName): Promise<RoleEntity> {
-    const getRoleByNameDto: GetRoleByNameDto = {
-      name: roleName,
-    };
-
-    const role: RoleEntity = await this.rolesService.getRoleByName(
-      getRoleByNameDto,
-    );
-
-    if (!role) {
-      throw new NotFoundException('Role not found: ', JSON.stringify(role));
-    }
-
-    return role;
   }
 }

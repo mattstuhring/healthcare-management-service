@@ -28,6 +28,7 @@ import { RoleName } from '../../roles/constants/role-name.enum';
 describe('UsersService', () => {
   let usersService: UsersService;
   let usersRepository: Repository<UserEntity>;
+  let rolesService: RolesService;
 
   const USER_REPOSITORY_TOKEN = getRepositoryToken(UserEntity);
 
@@ -50,6 +51,7 @@ describe('UsersService', () => {
 
     usersService = module.get<UsersService>(UsersService);
     usersRepository = module.get<Repository<UserEntity>>(USER_REPOSITORY_TOKEN);
+    rolesService = module.get<RolesService>(RolesService);
   });
 
   afterEach(() => {
@@ -94,19 +96,18 @@ describe('UsersService', () => {
 
     it('should retrieve role by name', async () => {
       // Arrange
-      const getRoleByNameSpy = jest.spyOn(
-        UsersService.prototype as any,
-        'getRoleByName',
-      );
+      const getRoleByNameSpy = jest.spyOn(rolesService, 'getRoleByName');
+
+      const userDto = { ...createUserDtoStub, roleName: RoleName.ADMIN };
 
       // Act
-      await usersService.createUser(createUserDtoStub);
+      await usersService.createUser(userDto);
 
       // Assert
       expect(getRoleByNameSpy).toBeCalledTimes(1);
     });
 
-    it('should create and save user', async () => {
+    it('should save user', async () => {
       // Arrange
       const hashedPassword = 'abc123';
       const result: UserEntity = userCustomerStub;
@@ -114,9 +115,7 @@ describe('UsersService', () => {
       jest
         .spyOn(UsersService.prototype as any, 'encryptPassword')
         .mockReturnValue(hashedPassword);
-      const repoCreateSpy = jest
-        .spyOn(usersRepository, 'create')
-        .mockReturnValue(result);
+
       const repoSaveSpy = jest.spyOn(usersRepository, 'save');
 
       // Act
@@ -124,9 +123,7 @@ describe('UsersService', () => {
       userCustomerStub.password = hashedPassword;
 
       // Assert
-      expect(repoCreateSpy).toBeCalledTimes(1);
       expect(repoSaveSpy).toBeCalledTimes(1);
-      expect(repoSaveSpy).toBeCalledWith(result);
     });
 
     it('should throw NotFoundException', async () => {
@@ -265,16 +262,16 @@ describe('UsersService', () => {
 
     it('should update user', async () => {
       // Arrange
-      const updatedUser: UserEntity = userCustomerStub;
-      updatedUser.name = updateUserDtoStub.name;
-      updatedUser.dateOfBirth = updateUserDtoStub.dateOfBirth;
-      updatedUser.username = updateUserDtoStub.username;
+      const updatedUser = { ...userCustomerStub };
+      updatedUser.name = 'Jane Doe';
+      updatedUser.dateOfBirth = '22/22/2222';
+      updatedUser.username = 'janedoe@email.com';
       updatedUser.role = roleAdminStub;
 
       const spy = jest.spyOn(usersRepository, 'save');
 
       // Act
-      await usersService.updateUser(getUserDtoStub, updateUserDtoStub);
+      await usersService.updateUser(getUserDtoStub, updatedUser);
 
       // Assert
       expect(spy).toHaveBeenCalledWith(updatedUser);
@@ -302,9 +299,7 @@ describe('UsersService', () => {
         roleName: RoleName.CUSTOMER,
       };
 
-      const spy = jest
-        .spyOn(UsersService.prototype as any, 'getRoleByName')
-        .mockReturnValue(roleCustomerStub);
+      const spy = jest.spyOn(rolesService, 'getRoleByName');
 
       // Act
       await usersService.updateUser(getUserDtoStub, payload);
@@ -315,13 +310,10 @@ describe('UsersService', () => {
 
     it('should not retrieve role', async () => {
       // Arrange
-      const getRoleByNameSpy = jest.spyOn(
-        UsersService.prototype as any,
-        'getRoleByName',
-      );
+      const getRoleByNameSpy = jest.spyOn(rolesService, 'getRoleByName');
 
       // Act
-      updateUserDtoStub.roleName = null;
+      updateUserDtoStub.roleName = undefined;
       await usersService.updateUser(getUserDtoStub, updateUserDtoStub);
 
       // Assert
