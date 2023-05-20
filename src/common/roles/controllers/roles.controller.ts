@@ -17,7 +17,7 @@ import { GetRoleByNameDto } from '../dtos/get-role-by-name.dto';
 import { RoleEntity } from '../entity/role.entity';
 import { RolesGuard } from '../guards/roles.guard';
 import { RolesService } from '../services/roles.service';
-import { AuthJwtGuard } from '../../auth/guards/auth-jwt.guard';
+import { AuthJwtGuard } from '../../../auth/guards/auth-jwt.guard';
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -27,7 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { UpdateRoleDto } from '../dtos/update-role.dto';
 import { DeleteRoleDto } from '../dtos/delete-role.dto';
-import { CommonApiErrorResponses } from '../../global/decorators/common-api-error-responses.decorator';
+import { CommonApiErrorResponses } from '../../../global/decorators/common-api-error-responses.decorator';
 
 @ApiTags('Roles')
 @Controller('roles')

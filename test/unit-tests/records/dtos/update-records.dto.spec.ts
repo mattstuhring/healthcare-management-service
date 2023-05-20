@@ -1,7 +1,7 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { updateRecordDtoStub } from '../mocks/records.stub';
-import { UpdateRecordDto } from '../../../../src/records/dtos/update-record.dto';
+import { UpdateRecordDto } from '../../../../src/common/records/dtos/update-record.dto';
 
 describe('UpdateRecordDto', () => {
   let dto: UpdateRecordDto;

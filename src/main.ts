@@ -8,22 +8,22 @@ import {
 import { AppModule } from './app.module';
 import { AuthLoginUserDto } from './auth/dtos/auth-login-user.dto';
 import { AuthRefreshTokenDto } from './auth/dtos/auth-refresh-token.dto';
-import { CreateRecordDto } from './records/dtos/create-record.dto';
-import { DeleteRecordDto } from './records/dtos/delete-record.dto';
-import { GetRecordDto } from './records/dtos/get-record.dto';
-import { GetRecordsFilterDto } from './records/dtos/get-records-filter.dto';
-import { UpdateRecordDto } from './records/dtos/update-record.dto';
-import { CreateRoleDto } from './roles/dtos/create-role.dto';
-import { DeleteRoleDto } from './roles/dtos/delete-role.dto';
-import { GetRoleByNameDto } from './roles/dtos/get-role-by-name.dto';
-import { GetRoleDto } from './roles/dtos/get-role.dto';
-import { UpdateRoleDto } from './roles/dtos/update-role.dto';
+import { CreateRecordDto } from './common/records/dtos/create-record.dto';
+import { DeleteRecordDto } from './common/records/dtos/delete-record.dto';
+import { GetRecordDto } from './common/records/dtos/get-record.dto';
+import { GetRecordsFilterDto } from './common/records/dtos/get-records-filter.dto';
+import { UpdateRecordDto } from './common/records/dtos/update-record.dto';
+import { CreateRoleDto } from './common/roles/dtos/create-role.dto';
+import { DeleteRoleDto } from './common/roles/dtos/delete-role.dto';
+import { GetRoleByNameDto } from './common/roles/dtos/get-role-by-name.dto';
+import { GetRoleDto } from './common/roles/dtos/get-role.dto';
+import { UpdateRoleDto } from './common/roles/dtos/update-role.dto';
 import { TransformInterceptor } from './global/interceptors/transform.interceptor';
-import { CreateUserDto } from './users/dtos/create-user.dto';
-import { DeleteUserDto } from './users/dtos/delete-user.dto';
-import { GetUserByUsernameDto } from './users/dtos/get-user-by-username.dto';
-import { GetUserDto } from './users/dtos/get-user.dto';
-import { UpdateUserDto } from './users/dtos/update-user.dto';
+import { CreateUserDto } from './common/users/dtos/create-user.dto';
+import { DeleteUserDto } from './common/users/dtos/delete-user.dto';
+import { GetUserByUsernameDto } from './common/users/dtos/get-user-by-username.dto';
+import { GetUserDto } from './common/users/dtos/get-user.dto';
+import { UpdateUserDto } from './common/users/dtos/update-user.dto';
 
 async function bootstrap() {
   const logger = new Logger();

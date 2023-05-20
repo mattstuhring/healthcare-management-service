@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { UpdateRoleDto } from '../../../../src/roles/dtos/update-role.dto';
+import { UpdateRoleDto } from '../../../../src/common/roles/dtos/update-role.dto';
 import { updateRoleDtoStub } from '../mocks/roles.stub';
 
 describe('CreateRoleDto', () => {

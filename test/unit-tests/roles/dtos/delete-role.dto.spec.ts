@@ -1,7 +1,7 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { deleteRoleDtoStub } from '../mocks/roles.stub';
-import { DeleteRoleDto } from '../../../../src/roles/dtos/delete-role.dto';
+import { DeleteRoleDto } from '../../../../src/common/roles/dtos/delete-role.dto';
 
 describe('DeleteRoleDto', () => {
   let dto: DeleteRoleDto;

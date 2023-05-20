@@ -1,16 +1,16 @@
-import { CreateUserDto } from '../../../../src/users/dtos/create-user.dto';
+import { CreateUserDto } from '../../../../src/common/users/dtos/create-user.dto';
 import { DeleteResult } from 'typeorm';
 import {
   roleAdminStub,
   roleCustomerStub,
   roleEmployeeStub,
 } from '../../roles/mocks/roles.stub';
-import { UserEntity } from '../../../../src/users/entity/user.entity';
-import { GetUserDto } from '../../../../src/users/dtos/get-user.dto';
-import { GetUserByUsernameDto } from '../../../../src/users/dtos/get-user-by-username.dto';
-import { UpdateUserDto } from '../../../../src/users/dtos/update-user.dto';
-import { RoleName } from '../../../../src/roles/constants/role.enum';
-import { DeleteUserDto } from '../../../../src/users/dtos/delete-user.dto';
+import { UserEntity } from '../../../../src/common/users/entity/user.entity';
+import { GetUserDto } from '../../../../src/common/users/dtos/get-user.dto';
+import { GetUserByUsernameDto } from '../../../../src/common/users/dtos/get-user-by-username.dto';
+import { UpdateUserDto } from '../../../../src/common/users/dtos/update-user.dto';
+import { RoleName } from '../../../../src/common/roles/constants/role.enum';
+import { DeleteUserDto } from '../../../../src/common/users/dtos/delete-user.dto';
 
 /**
  * Stubs

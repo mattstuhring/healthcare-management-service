@@ -21,7 +21,7 @@ import { GetRecordsFilterDto } from '../dtos/get-records-filter.dto';
 import { Roles } from '../../roles/decorators/roles.decorator';
 import { RoleName } from '../../roles/constants/role.enum';
 import { RolesGuard } from '../../roles/guards/roles.guard';
-import { AuthJwtGuard } from '../../auth/guards/auth-jwt.guard';
+import { AuthJwtGuard } from '../../../auth/guards/auth-jwt.guard';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,

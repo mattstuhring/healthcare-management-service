@@ -1,8 +1,8 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { GetRoleByNameDto } from '../../../../src/roles/dtos/get-role-by-name.dto';
+import { GetRoleByNameDto } from '../../../../src/common/roles/dtos/get-role-by-name.dto';
 import { getRoleByNameDtoStub } from '../mocks/roles.stub';
-import { RoleName } from '../../../../src/roles/constants/role.enum';
+import { RoleName } from '../../../../src/common/roles/constants/role.enum';
 
 describe('GetUserByUsernameDto', () => {
   let dto: GetRoleByNameDto;

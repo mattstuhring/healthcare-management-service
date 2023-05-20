@@ -5,8 +5,8 @@ import {
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { RoleEntity } from '../../../src/roles/entity/role.entity';
-import { RolesService } from '../../../src/roles/services/roles.service';
+import { RoleEntity } from '../../../src/common/roles/entity/role.entity';
+import { RolesService } from '../../../src/common/roles/services/roles.service';
 import { rolesRepositoryMock } from './mocks/roles.mock';
 import {
   createRoleDtoStub,

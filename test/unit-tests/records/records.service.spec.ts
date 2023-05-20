@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { RecordEntity } from '../../../src/records/entity/record.entity';
-import { RecordsService } from '../../../src/records/services/records.service';
-import { UsersService } from '../../../src/users/services/users.service';
-import { RolesService } from '../../../src/roles/services/roles.service';
+import { RecordEntity } from '../../../src/common/records/entity/record.entity';
+import { RecordsService } from '../../../src/common/records/services/records.service';
+import { UsersService } from '../../../src/common/users/services/users.service';
+import { RolesService } from '../../../src/common/roles/services/roles.service';
 import {
   createQueryBuilderMock,
   recordsRepositoryMock,
@@ -21,13 +21,13 @@ import {
   recordStub,
   updateRecordDtoStub,
 } from './mocks/records.stub';
-import { GetRecordsFilterDto } from '../../../src/records/dtos/get-records-filter.dto';
+import { GetRecordsFilterDto } from '../../../src/common/records/dtos/get-records-filter.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { userCustomerStub } from '../users/mocks/users.stub';
-import { GetRecordDto } from '../../../src/records/dtos/get-record.dto';
-import { UpdateRecordDto } from '../../../src/records/dtos/update-record.dto';
-import { Healthcare } from '../../../src/records/constants/record-healthcare.enum';
-import { HealthStatus } from '../../../src/records/constants/record-health-status.enum';
+import { GetRecordDto } from '../../../src/common/records/dtos/get-record.dto';
+import { UpdateRecordDto } from '../../../src/common/records/dtos/update-record.dto';
+import { Healthcare } from '../../../src/common/records/constants/record-healthcare.enum';
+import { HealthStatus } from '../../../src/common/records/constants/record-health-status.enum';
 
 describe('RecordsService', () => {
   let recordsService: RecordsService;

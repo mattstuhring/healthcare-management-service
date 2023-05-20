@@ -1,6 +1,6 @@
 import { deleteUserDtoStub } from '../mocks/users.stub';
 import { validate } from 'class-validator';
-import { DeleteUserDto } from '../../../../src/users/dtos/delete-user.dto';
+import { DeleteUserDto } from '../../../../src/common/users/dtos/delete-user.dto';
 import { plainToInstance } from 'class-transformer';
 
 describe('DeleteUserDto', () => {

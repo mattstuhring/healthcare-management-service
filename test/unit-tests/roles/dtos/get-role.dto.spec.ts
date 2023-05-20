@@ -1,7 +1,7 @@
 import { getRoleDtoStub } from '../mocks/roles.stub';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { GetRoleDto } from '../../../../src/roles/dtos/get-role.dto';
+import { GetRoleDto } from '../../../../src/common/roles/dtos/get-role.dto';
 
 describe('GetUserByUsernameDto', () => {
   let dto: GetRoleDto;

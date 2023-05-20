@@ -1,4 +1,4 @@
-import { RoleEntity } from '../../roles/entity/role.entity';
+import { RoleEntity } from '../../common/roles/entity/role.entity';
 
 export interface AuthAccessTokenPayload {
   username: string;

@@ -1,5 +1,5 @@
 import { validate } from 'class-validator';
-import { CreateRecordDto } from '../../../../src/records/dtos/create-record.dto';
+import { CreateRecordDto } from '../../../../src/common/records/dtos/create-record.dto';
 import { plainToInstance } from 'class-transformer';
 import { createRecordDtoStub } from '../mocks/records.stub';
 
