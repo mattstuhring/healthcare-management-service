@@ -1,5 +1,5 @@
 import { HealthStatus } from '../../../../src/records/constants/record-health-status.enum';
-import { RecordEntity } from '../../../../src/records/record.entity';
+import { RecordEntity } from '../../../../src/records/entity/record.entity';
 import { GetRecordsFilterDto } from '../../../../src/records/dtos/get-records-filter.dto';
 import { Healthcare } from '../../../../src/records/constants/record-healthcare.enum';
 import { userCustomerStub } from '../../users/mocks/users.stub';

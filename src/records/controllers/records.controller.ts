@@ -11,17 +11,17 @@ import {
   UseGuards,
   Logger,
 } from '@nestjs/common';
-import { RecordsService } from './records.service';
-import { RecordEntity } from './record.entity';
-import { CreateRecordDto } from './dtos/create-record.dto';
-import { GetRecordDto } from './dtos/get-record.dto';
-import { DeleteRecordDto } from './dtos/delete-record.dto';
-import { UpdateRecordDto } from './dtos/update-record.dto';
-import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
-import { Roles } from '../roles/decorators/roles.decorator';
-import { RoleName } from '../roles/constants/role-name.enum';
-import { RolesGuard } from '../roles/roles.guard';
-import { AuthJwtGuard } from '../auth/auth-jwt.guard';
+import { RecordsService } from '../services/records.service';
+import { RecordEntity } from '../entity/record.entity';
+import { CreateRecordDto } from '../dtos/create-record.dto';
+import { GetRecordDto } from '../dtos/get-record.dto';
+import { DeleteRecordDto } from '../dtos/delete-record.dto';
+import { UpdateRecordDto } from '../dtos/update-record.dto';
+import { GetRecordsFilterDto } from '../dtos/get-records-filter.dto';
+import { Roles } from '../../roles/decorators/roles.decorator';
+import { RoleName } from '../../roles/constants/role.enum';
+import { RolesGuard } from '../../roles/guards/roles.guard';
+import { AuthJwtGuard } from '../../auth/guards/auth-jwt.guard';
 import {
   ApiCreatedResponse,
   ApiNoContentResponse,

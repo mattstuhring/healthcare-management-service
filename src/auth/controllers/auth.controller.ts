@@ -1,10 +1,10 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
-import { AuthService } from './auth.service';
-import { CreateUserDto } from '../users/dtos/create-user.dto';
-import { AuthJwtResponse } from './models/auth-jwt-response.interface';
-import { AuthRefreshTokenDto } from './dtos/auth-refresh-token.dto';
-import { AuthJwtGuard } from './auth-jwt.guard';
+import { AuthLoginUserDto } from '../dtos/auth-login-user.dto';
+import { AuthService } from '../services/auth.service';
+import { CreateUserDto } from '../../users/dtos/create-user.dto';
+import { AuthJwtResponse } from '../models/auth-jwt-response.interface';
+import { AuthRefreshTokenDto } from '../dtos/auth-refresh-token.dto';
+import { AuthJwtGuard } from '../guards/auth-jwt.guard';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,

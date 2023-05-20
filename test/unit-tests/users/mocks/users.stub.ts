@@ -5,11 +5,11 @@ import {
   roleCustomerStub,
   roleEmployeeStub,
 } from '../../roles/mocks/roles.stub';
-import { UserEntity } from '../../../../src/users/user.entity';
+import { UserEntity } from '../../../../src/users/entity/user.entity';
 import { GetUserDto } from '../../../../src/users/dtos/get-user.dto';
 import { GetUserByUsernameDto } from '../../../../src/users/dtos/get-user-by-username.dto';
 import { UpdateUserDto } from '../../../../src/users/dtos/update-user.dto';
-import { RoleName } from '../../../../src/roles/constants/role-name.enum';
+import { RoleName } from '../../../../src/roles/constants/role.enum';
 import { DeleteUserDto } from '../../../../src/users/dtos/delete-user.dto';
 
 /**

@@ -2,7 +2,7 @@ import { createUserDtoStub, invalidPassword } from '../mocks/users.stub';
 import { validate } from 'class-validator';
 import { CreateUserDto } from '../../../../src/users/dtos/create-user.dto';
 import { plainToInstance } from 'class-transformer';
-import { RoleName } from '../../../../src/roles/constants/role-name.enum';
+import { RoleName } from '../../../../src/roles/constants/role.enum';
 
 describe('CreateUserDto', () => {
   let dto: CreateUserDto;

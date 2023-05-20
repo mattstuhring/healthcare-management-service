@@ -3,9 +3,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesModule } from '../roles/roles.module';
-import { UserEntity } from './user.entity';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
+import { UserEntity } from './entity/user.entity';
+import { UsersController } from './controllers/users.controller';
+import { UsersService } from './services/users.service';
 
 @Module({
   controllers: [UsersController],

@@ -6,12 +6,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateRoleDto } from './dtos/create-role.dto';
-import { GetRoleDto } from './dtos/get-role.dto';
-import { GetRoleByNameDto } from './dtos/get-role-by-name.dto';
-import { RoleEntity } from './role.entity';
-import { DeleteRoleDto } from './dtos/delete-role.dto';
-import { UpdateRoleDto } from './dtos/update-role.dto';
+import { CreateRoleDto } from '../dtos/create-role.dto';
+import { GetRoleDto } from '../dtos/get-role.dto';
+import { GetRoleByNameDto } from '../dtos/get-role-by-name.dto';
+import { RoleEntity } from '../entity/role.entity';
+import { DeleteRoleDto } from '../dtos/delete-role.dto';
+import { UpdateRoleDto } from '../dtos/update-role.dto';
 
 /**
  * Roles Service - Supports role-based access control (RBAC)

@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { RolesService } from '../../../src/roles/roles.service';
+import { RolesService } from '../../../src/roles/services/roles.service';
 import { DeleteResult, Repository } from 'typeorm';
-import { UserEntity } from '../../../src/users/user.entity';
-import { UsersService } from '../../../src/users/users.service';
+import { UserEntity } from '../../../src/users/entity/user.entity';
+import { UsersService } from '../../../src/users/services/users.service';
 import { usersRepositoryMock } from './mocks/users.mock';
 import {
   createUserDtoStub,
@@ -20,7 +20,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UpdateUserDto } from '../../../src/users/dtos/update-user.dto';
-import { RoleName } from '../../../src/roles/constants/role-name.enum';
+import { RoleName } from '../../../src/roles/constants/role.enum';
 
 describe('UsersService', () => {
   let usersService: UsersService;

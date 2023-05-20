@@ -1,4 +1,4 @@
-import { UserEntity } from '../users/user.entity';
+import { UserEntity } from '../../users/entity/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,8 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { HealthStatus } from './constants/record-health-status.enum';
-import { Healthcare } from './constants/record-healthcare.enum';
+import { HealthStatus } from '../constants/record-health-status.enum';
+import { Healthcare } from '../constants/record-healthcare.enum';
 
 @Entity({ name: 'record' })
 export class RecordEntity {

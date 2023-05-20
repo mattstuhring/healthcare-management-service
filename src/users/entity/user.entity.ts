@@ -9,8 +9,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { RecordEntity } from '../records/record.entity';
-import { RoleEntity } from '../roles/role.entity';
+import { RecordEntity } from '../../records/entity/record.entity';
+import { RoleEntity } from '../../roles/entity/role.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity {

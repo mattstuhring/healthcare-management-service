@@ -9,15 +9,15 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { RoleName } from './constants/role-name.enum';
-import { Roles } from './decorators/roles.decorator';
-import { CreateRoleDto } from './dtos/create-role.dto';
-import { GetRoleDto } from './dtos/get-role.dto';
-import { GetRoleByNameDto } from './dtos/get-role-by-name.dto';
-import { RoleEntity } from './role.entity';
-import { RolesGuard } from './roles.guard';
-import { RolesService } from './roles.service';
-import { AuthJwtGuard } from '../auth/auth-jwt.guard';
+import { RoleName } from '../constants/role.enum';
+import { Roles } from '../decorators/roles.decorator';
+import { CreateRoleDto } from '../dtos/create-role.dto';
+import { GetRoleDto } from '../dtos/get-role.dto';
+import { GetRoleByNameDto } from '../dtos/get-role-by-name.dto';
+import { RoleEntity } from '../entity/role.entity';
+import { RolesGuard } from '../guards/roles.guard';
+import { RolesService } from '../services/roles.service';
+import { AuthJwtGuard } from '../../auth/guards/auth-jwt.guard';
 import {
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -25,9 +25,9 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateRoleDto } from './dtos/update-role.dto';
-import { DeleteRoleDto } from './dtos/delete-role.dto';
-import { CommonApiErrorResponses } from '../global/decorators/common-api-error-responses.decorator';
+import { UpdateRoleDto } from '../dtos/update-role.dto';
+import { DeleteRoleDto } from '../dtos/delete-role.dto';
+import { CommonApiErrorResponses } from '../../global/decorators/common-api-error-responses.decorator';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -44,7 +44,7 @@ export class RolesController {
   @ApiCreatedResponse({ description: 'The resource was created Succesfully' })
   @ApiConflictResponse({ description: 'The resource aleady exists' })
   @CommonApiErrorResponses()
-  @Roles(RoleName.ADMIN)
+  @Roles(RoleName.SUPER_ADMIN)
   @HttpCode(201)
   createRole(@Body() createRoleDto: CreateRoleDto): Promise<RoleEntity> {
     return this.rolesService.createRole(createRoleDto);
@@ -53,16 +53,15 @@ export class RolesController {
   @Get(':id')
   @ApiOkResponse({ description: 'The resource was fetched successfully' })
   @CommonApiErrorResponses()
-  @Roles(RoleName.ADMIN)
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRole(@Param() getRoleDto: GetRoleDto): Promise<RoleEntity> {
     return this.rolesService.getRole(getRoleDto);
   }
 
   @Get('name/:name')
-  @ApiOkResponse({ description: 'The resource was returned successfully' })
   @ApiOkResponse({ description: 'The resource was fetched successfully' })
   @CommonApiErrorResponses()
-  @Roles(RoleName.ADMIN)
+  @Roles(RoleName.ADMIN, RoleName.EMPLOYEE)
   getRoleByName(
     @Param() getRoleByNameDto: GetRoleByNameDto,
   ): Promise<RoleEntity> {
@@ -80,7 +79,7 @@ export class RolesController {
   @Patch(':id')
   @ApiOkResponse({ description: 'The resource was fetched successfully' })
   @CommonApiErrorResponses()
-  @Roles(RoleName.ADMIN)
+  @Roles(RoleName.SUPER_ADMIN)
   updateRole(
     @Param() getRoleDto: GetRoleDto,
     @Body() updateRoleDto: UpdateRoleDto,
@@ -93,7 +92,7 @@ export class RolesController {
     description: 'The resource was deleted successfully',
   })
   @CommonApiErrorResponses()
-  @Roles(RoleName.ADMIN)
+  @Roles(RoleName.SUPER_ADMIN)
   @HttpCode(204)
   deleteRole(@Param() deleteRoleDto: DeleteRoleDto): Promise<void> {
     return this.rolesService.deleteRole(deleteRoleDto);

@@ -5,16 +5,16 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { AuthLoginUserDto } from './dtos/auth-login-user.dto';
+import { AuthLoginUserDto } from '../dtos/auth-login-user.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import { UserEntity } from '../users/user.entity';
-import { AuthJwtResponse } from './models/auth-jwt-response.interface';
-import { CreateUserDto } from '../users/dtos/create-user.dto';
-import { RoleName } from '../roles/constants/role-name.enum';
-import { AuthRefreshTokenPayload } from './models/auth-refresh-token-payload.interface';
-import { AuthRefreshTokenDto } from './dtos/auth-refresh-token.dto';
+import { UsersService } from '../../users/services/users.service';
+import { UserEntity } from '../../users/entity/user.entity';
+import { AuthJwtResponse } from '../models/auth-jwt-response.interface';
+import { CreateUserDto } from '../../users/dtos/create-user.dto';
+import { RoleName } from '../../roles/constants/role.enum';
+import { AuthRefreshTokenPayload } from '../models/auth-refresh-token-payload.interface';
+import { AuthRefreshTokenDto } from '../dtos/auth-refresh-token.dto';
 import { ConfigService } from '@nestjs/config';
 
 /**

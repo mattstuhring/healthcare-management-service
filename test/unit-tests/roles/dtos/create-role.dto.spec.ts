@@ -1,6 +1,6 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { RoleName } from '../../../../src/roles/constants/role-name.enum';
+import { RoleName } from '../../../../src/roles/constants/role.enum';
 import { CreateRoleDto } from '../../../../src/roles/dtos/create-role.dto';
 import { createRoleDtoStub } from '../mocks/roles.stub';
 

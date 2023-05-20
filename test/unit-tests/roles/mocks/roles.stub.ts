@@ -1,8 +1,8 @@
 import { CreateRoleDto } from '../../../../src/roles/dtos/create-role.dto';
 import { GetRoleDto } from '../../../../src/roles/dtos/get-role.dto';
 import { DeleteResult } from 'typeorm';
-import { RoleName } from '../../../../src/roles/constants/role-name.enum';
-import { RoleEntity } from '../../../../src/roles/role.entity';
+import { RoleName } from '../../../../src/roles/constants/role.enum';
+import { RoleEntity } from '../../../../src/roles/entity/role.entity';
 import { GetRoleByNameDto } from '../../../../src/roles/dtos/get-role-by-name.dto';
 import { UpdateRoleDto } from '../../../../src/roles/dtos/update-role.dto';
 import { DeleteRoleDto } from '../../../../src/roles/dtos/delete-role.dto';

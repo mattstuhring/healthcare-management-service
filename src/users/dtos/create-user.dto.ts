@@ -9,7 +9,7 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { RoleName } from '../../roles/constants/role-name.enum';
+import { RoleName } from '../../roles/constants/role.enum';
 
 export class CreateUserDto {
   @ApiProperty({

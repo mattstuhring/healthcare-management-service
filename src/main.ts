@@ -18,7 +18,7 @@ import { DeleteRoleDto } from './roles/dtos/delete-role.dto';
 import { GetRoleByNameDto } from './roles/dtos/get-role-by-name.dto';
 import { GetRoleDto } from './roles/dtos/get-role.dto';
 import { UpdateRoleDto } from './roles/dtos/update-role.dto';
-import { TransformInterceptor } from './transform.interceptor';
+import { TransformInterceptor } from './global/interceptors/transform.interceptor';
 import { CreateUserDto } from './users/dtos/create-user.dto';
 import { DeleteUserDto } from './users/dtos/delete-user.dto';
 import { GetUserByUsernameDto } from './users/dtos/get-user-by-username.dto';

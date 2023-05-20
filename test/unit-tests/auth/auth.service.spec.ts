@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '../../../src/auth/auth.service';
+import { AuthService } from '../../../src/auth/services/auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../../../src/users/users.service';
+import { UsersService } from '../../../src/users/services/users.service';
 import { ConfigService } from '@nestjs/config';
 import { createUserDtoStub, userCustomerStub } from '../users/mocks/users.stub';
-import { RoleName } from '../../../src/roles/constants/role-name.enum';
+import { RoleName } from '../../../src/roles/constants/role.enum';
 import {
   BadRequestException,
   InternalServerErrorException,

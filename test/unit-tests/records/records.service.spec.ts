@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
-import { RecordEntity } from '../../../src/records/record.entity';
-import { RecordsService } from '../../../src/records/records.service';
-import { UsersService } from '../../../src/users/users.service';
-import { RolesService } from '../../../src/roles/roles.service';
+import { RecordEntity } from '../../../src/records/entity/record.entity';
+import { RecordsService } from '../../../src/records/services/records.service';
+import { UsersService } from '../../../src/users/services/users.service';
+import { RolesService } from '../../../src/roles/services/roles.service';
 import {
   createQueryBuilderMock,
   recordsRepositoryMock,
@@ -22,11 +22,7 @@ import {
   updateRecordDtoStub,
 } from './mocks/records.stub';
 import { GetRecordsFilterDto } from '../../../src/records/dtos/get-records-filter.dto';
-import {
-  BadRequestException,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { userCustomerStub } from '../users/mocks/users.stub';
 import { GetRecordDto } from '../../../src/records/dtos/get-record.dto';
 import { UpdateRecordDto } from '../../../src/records/dtos/update-record.dto';

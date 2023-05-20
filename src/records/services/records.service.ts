@@ -6,15 +6,15 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { HealthStatus } from './constants/record-health-status.enum';
-import { CreateRecordDto } from './dtos/create-record.dto';
-import { GetRecordDto } from './dtos/get-record.dto';
-import { DeleteRecordDto } from './dtos/delete-record.dto';
-import { UpdateRecordDto } from './dtos/update-record.dto';
-import { GetRecordsFilterDto } from './dtos/get-records-filter.dto';
-import { RecordEntity } from './record.entity';
-import { UserEntity } from '../users/user.entity';
-import { UsersService } from '../users/users.service';
+import { HealthStatus } from '../constants/record-health-status.enum';
+import { CreateRecordDto } from '../dtos/create-record.dto';
+import { GetRecordDto } from '../dtos/get-record.dto';
+import { DeleteRecordDto } from '../dtos/delete-record.dto';
+import { UpdateRecordDto } from '../dtos/update-record.dto';
+import { GetRecordsFilterDto } from '../dtos/get-records-filter.dto';
+import { RecordEntity } from '../entity/record.entity';
+import { UserEntity } from '../../users/entity/user.entity';
+import { UsersService } from '../../users/services/users.service';
 
 /**
  * Records Service - Supports CRUD operations for managing heath records.

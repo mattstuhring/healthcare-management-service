@@ -3,7 +3,8 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { AuthAccessTokenPayload } from '../auth/models/auth-access-token-payload.interface';
+import { AuthAccessTokenPayload } from '../../auth/models/auth-access-token-payload.interface';
+import { RoleName } from '../constants/role.enum';
 
 /**
  * RBAC Guard for authorization by role
@@ -24,9 +25,10 @@ export class RolesGuard implements CanActivate {
     try {
       const request = context.switchToHttp().getRequest<Request>();
 
-      // Get Roles metadata from route
-      // If defined, only those roles should have access to route
+      // Get Roles metadata from request
       const roles = this.reflector.get<string[]>('roles', context.getHandler());
+
+      // Public API
       if (!roles) {
         return true;
       }
@@ -34,6 +36,7 @@ export class RolesGuard implements CanActivate {
       // Check if user is authorized
       const token = this.getToken(request);
       const isAuthorized = this.authorizer(token, roles);
+      console.log('authorized: ' + isAuthorized);
 
       return isAuthorized;
     } catch (err) {
@@ -45,6 +48,11 @@ export class RolesGuard implements CanActivate {
   // Perform authorization
   authorizer(token: string, roles: string[]): boolean {
     const user = this.jwtService.decode(token) as AuthAccessTokenPayload;
+
+    // SUPER ADMIN has permission to all resources & actions
+    if (user.role.name === RoleName.SUPER_ADMIN) {
+      return true;
+    }
 
     return roles.includes(user.role.name);
   }

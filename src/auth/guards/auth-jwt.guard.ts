@@ -31,7 +31,7 @@ export class AuthJwtGuard implements CanActivate {
   // Perform token authentication
   verifyToken(token: string) {
     this.jwtService.verify(token);
-    console.log('Successful authentication');
+    console.log('authenticated: true');
   }
 
   // Extract Bearer token from request headers
