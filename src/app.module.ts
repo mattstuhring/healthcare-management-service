@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { RecordsModule } from './common/records/records.module';
+import { RecordsModule } from './records/records.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './common/users/users.module';
+import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ConfigSchemaValidation } from './config/config.schema';
-import { RolesModule } from './common/roles/roles.module';
-import { PermissionsModule } from './common/permissions/permissions.module';
+import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [

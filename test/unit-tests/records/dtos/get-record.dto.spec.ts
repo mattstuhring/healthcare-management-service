@@ -1,7 +1,7 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { getRecordDtoStub } from '../mocks/records.stub';
-import { GetRecordDto } from '../../../../src/common/records/dtos/get-record.dto';
+import { GetRecordDto } from '../../../../src/records/dtos/get-record.dto';
 
 describe('DeleteRecordDto', () => {
   let dto: GetRecordDto;

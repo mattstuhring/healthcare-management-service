@@ -1,12 +1,12 @@
-import { HealthStatus } from '../../../../src/common/records/constants/record-health-status.enum';
-import { RecordEntity } from '../../../../src/common/records/entity/record.entity';
-import { GetRecordsFilterDto } from '../../../../src/common/records/dtos/get-records-filter.dto';
-import { Healthcare } from '../../../../src/common/records/constants/record-healthcare.enum';
+import { HealthStatus } from '../../../../src/records/constants/record-health-status.enum';
+import { RecordEntity } from '../../../../src/records/entity/record.entity';
+import { GetRecordsFilterDto } from '../../../../src/records/dtos/get-records-filter.dto';
+import { Healthcare } from '../../../../src/records/constants/record-healthcare.enum';
 import { userCustomerStub } from '../../users/mocks/users.stub';
-import { CreateRecordDto } from '../../../../src/common/records/dtos/create-record.dto';
-import { GetRecordDto } from '../../../../src/common/records/dtos/get-record.dto';
-import { UpdateRecordDto } from '../../../../src/common/records/dtos/update-record.dto';
-import { DeleteRecordDto } from '../../../../src/common/records/dtos/delete-record.dto';
+import { CreateRecordDto } from '../../../../src/records/dtos/create-record.dto';
+import { GetRecordDto } from '../../../../src/records/dtos/get-record.dto';
+import { UpdateRecordDto } from '../../../../src/records/dtos/update-record.dto';
+import { DeleteRecordDto } from '../../../../src/records/dtos/delete-record.dto';
 import { DeleteResult } from 'typeorm';
 
 /**

@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { RolesGuard } from '../../roles/guards/roles.guard';
-import { AuthJwtGuard } from '../../../auth/guards/auth-jwt.guard';
+import { AuthJwtGuard } from '../../auth/guards/auth-jwt.guard';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { GetUserByUsernameDto } from '../dtos/get-user-by-username.dto';
 import { UserEntity } from '../entity/user.entity';
@@ -28,7 +28,7 @@ import {
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { GetUserDto } from '../dtos/get-user.dto';
 import { DeleteUserDto } from '../dtos/delete-user.dto';
-import { CommonApiErrorResponses } from '../../../global/decorators/common-api-error-responses.decorator';
+import { CommonApiErrorResponses } from '../../global/decorators/common-api-error-responses.decorator';
 import { GetUsersDto } from '../dtos/get-users.dto';
 
 @ApiTags('Users')

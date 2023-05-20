@@ -1,7 +1,7 @@
 import { getUserDtoStub } from '../mocks/users.stub';
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { GetUserDto } from '../../../../src/common/users/dtos/get-user.dto';
+import { GetUserDto } from '../../../../src/users/dtos/get-user.dto';
 
 describe('GetUserByUsernameDto', () => {
   let dto: GetUserDto;

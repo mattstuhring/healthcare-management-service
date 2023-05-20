@@ -1,11 +1,11 @@
-import { CreateRoleDto } from '../../../../src/common/roles/dtos/create-role.dto';
-import { GetRoleDto } from '../../../../src/common/roles/dtos/get-role.dto';
+import { CreateRoleDto } from '../../../../src/roles/dtos/create-role.dto';
+import { GetRoleDto } from '../../../../src/roles/dtos/get-role.dto';
 import { DeleteResult } from 'typeorm';
-import { RoleName } from '../../../../src/common/roles/constants/role.enum';
-import { RoleEntity } from '../../../../src/common/roles/entity/role.entity';
-import { GetRoleByNameDto } from '../../../../src/common/roles/dtos/get-role-by-name.dto';
-import { UpdateRoleDto } from '../../../../src/common/roles/dtos/update-role.dto';
-import { DeleteRoleDto } from '../../../../src/common/roles/dtos/delete-role.dto';
+import { RoleName } from '../../../../src/roles/constants/role.enum';
+import { RoleEntity } from '../../../../src/roles/entity/role.entity';
+import { GetRoleByNameDto } from '../../../../src/roles/dtos/get-role-by-name.dto';
+import { UpdateRoleDto } from '../../../../src/roles/dtos/update-role.dto';
+import { DeleteRoleDto } from '../../../../src/roles/dtos/delete-role.dto';
 
 /**
  * Stubs

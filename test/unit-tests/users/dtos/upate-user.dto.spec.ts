@@ -1,8 +1,8 @@
 import { updateUserDtoStub } from '../mocks/users.stub';
 import { validate } from 'class-validator';
-import { UpdateUserDto } from '../../../../src/common/users/dtos/update-user.dto';
+import { UpdateUserDto } from '../../../../src/users/dtos/update-user.dto';
 import { plainToInstance } from 'class-transformer';
-import { RoleName } from '../../../../src/common/roles/constants/role.enum';
+import { RoleName } from '../../../../src/roles/constants/role.enum';
 
 describe('UpdateUserDto', () => {
   let dto: UpdateUserDto;
